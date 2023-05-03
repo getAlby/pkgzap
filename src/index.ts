@@ -1,11 +1,11 @@
 import Arborist from "@npmcli/arborist";
 import { readTree } from "libnpmfund";
 
-export async function getFundingDetails(excludeIndirectDeps: boolean = false) {
+export async function getFundingDetails(options?: {includeIndirectDeps: false}) {
   const arborist = new Arborist();
   const tree = await arborist.buildIdealTree();
 
-  if (!excludeIndirectDeps) {
+  if (!options || !options.includeIndirectDeps) {
     const actualChildren = new Map();
 
     tree.edgesOut.forEach((value, key) => {
