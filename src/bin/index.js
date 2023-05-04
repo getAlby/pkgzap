@@ -7,6 +7,7 @@ import dotenv from 'dotenv'
 import 'websocket-polyfill';
 import * as crypto from 'node:crypto';
 import { getFundingDetails } from "../index";
+import os from 'os';
 
 global.crypto = crypto;
 
@@ -24,7 +25,6 @@ function waitForInput(question) {
     });
   });
 }
-
 
 async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
   try {
@@ -51,26 +51,29 @@ export async function cli() {
   if (!includeIndirectDeps) {
     console.log(chalk.yellow(`Excluding indirect dependencies...`))
   }
-  const nwcURL = process.env.NWC_URL || '';
+
+  const homedir = os.homedir();
 
   let nwc;
   try {
-    if (nwcURL) {
+    try {
+      const nwcURL = await fs.promises.readFile(`${homedir}/.fund-ln`, 'utf8');
       console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
       nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
-    } else {
+    } catch (e) {
       nwc = webln.NostrWebLNProvider.withNewSecret();
       const url = await nwc.getAuthorizationUrl({ name: 'npm-ln' });
       console.log(chalk.green(`Please approve the NWC connection: ${chalk.blue.underline(url)}`))
       await waitForInput(`And press enter/return to continue...`);
-      const envData = `NWC_URL=${nwc.getNostrWalletConnectUrl()}`;
+
+      const nwcData = nwc.getNostrWalletConnectUrl();
       console.log("Saving the NostrWalletConnect URL...");
-      fs.writeFile('.env', envData, (err) => {
+      fs.writeFile(`${homedir}/.fund-ln`, nwcData, (err) => {
         if (err) {
-          console.error(err);
+          console.error(chalk.red(err.error || err));
           return;
         }
-        console.log('Saved!');
+        console.log(chalk.green(`Saved in ${homedir}/.fund-ln`));
       });
     }
     await nwc.enable();
