@@ -30,6 +30,16 @@ console.log(JSON.stringify(fundingInfo, null, 2))
 
 ```
 
+### In the CLI
+Install the package by running
+```bash
+npm install -g npm-fund-ln
+```
+and run it with
+```bash
+npm fund-ln
+```
+
 ## 🛠 Development
 
 ```
