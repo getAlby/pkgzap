@@ -20,6 +20,9 @@
     "require": "./dist/index.cjs",
     "default": "./dist/index.modern.js"
   },
+  "bin": {
+    "fund-ln": "./bin/fund.js"
+  },
   "scripts": {
     "prebuild": "yarn run clean",
     "prepack": "yarn run build",
@@ -30,7 +33,13 @@
   },
   "dependencies": {
     "@npmcli/arborist": "^6.2.8",
-    "libnpmfund": "^4.0.16"
+    "alby-js-sdk": "^1.6.0",
+    "alby-tools": "^2.2.1",
+    "chalk": "^4.1.2",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.0.3",
+    "libnpmfund": "^4.0.16",
+    "websocket-polyfill": "^0.0.3"
   },
   "devDependencies": {
     "@types/jest": "^29.4.0",

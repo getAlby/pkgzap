@@ -1,5 +1,7 @@
 import Arborist from "@npmcli/arborist";
-import { readTree } from "libnpmfund";
+import { readTree } from "./getFunding";
+
+export { cli } from "./bin/index.js";
 
 export async function getFundingDetails(options?: {includeIndirectDeps: false}) {
   const arborist = new Arborist();
@@ -17,7 +19,7 @@ export async function getFundingDetails(options?: {includeIndirectDeps: false}) 
     tree.children = actualChildren;
   }
 
-  const fundingInfo = await readTree(tree);
+  const packagesInfo = await readTree(tree);
 
-  return fundingInfo;
+  return packagesInfo.dependencies;
 }
