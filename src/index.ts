@@ -23,21 +23,46 @@ function allDeps(json) {
   return deps;
 }
 
-export async function fetchFundingInfo(json) {
-  const packages = allDeps(json);
-  const fundingInfo = {};
+async function fetcher(packages: string[], levels: number, res = {}) {
   for (const packageName of packages) {
     const url = `https://registry.npmjs.org/${packageName}/latest`;
     const response = await fetch(url);
     if (response.ok) {
       const data = await response.json();
+      if (levels) {
+        const packages = allDeps(data);
+        console.log(packages)
+        await fetcher(packages, levels-1, res);
+      }
       const { funding } = data;
-      fundingInfo[packageName] = funding;
+      res[packageName] = funding;
     } else {
       console.error(`Failed to fetch package info for ${packageName}`);
     }
   }
-  return fundingInfo;
+  return res;
+}
+
+export async function fetchFundingInfo(json, levels = 1) {
+  const packages = allDeps(json);
+  const results: Record<string, undefined | string | {type?: string, url?: string} | {type?: string, url?: string}[]> = {};
+  await fetcher(packages, levels, results);
+
+  const lnPackages = {};
+
+  for (const [key, value] of Object.entries(results)) {
+    if (value && typeof value !== 'string') {
+      if (Array.isArray(value)) {
+        const lnFunding = value.find((funding) => funding.type === 'lightning');
+        if (lnFunding) lnPackages[key] = lnFunding.url;
+      } else {
+        if (value.type === 'lightning') {
+          lnPackages[key] = value.url;
+        }
+      }
+    }
+  }
+  return lnPackages;
 }
 
 export async function getFundingDetails(options?: {includeIndirectDeps: false}) {
