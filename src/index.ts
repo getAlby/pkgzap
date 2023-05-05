@@ -31,7 +31,6 @@ async function fetcher(packages: string[], levels: number, res = {}) {
       const data = await response.json();
       if (levels) {
         const packages = allDeps(data);
-        console.log(packages)
         await fetcher(packages, levels-1, res);
       }
       const { funding } = data;
