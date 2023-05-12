@@ -24,6 +24,7 @@ function allDeps(json) {
 }
 
 async function fetcher(packages: string[], levels: number, res = {}) {
+  if (!levels) return res;
   for (const packageName of packages) {
     const url = `https://registry.npmjs.org/${packageName}/latest`;
     const response = await fetch(url, {
@@ -32,10 +33,8 @@ async function fetcher(packages: string[], levels: number, res = {}) {
     });
     if (response.ok) {
       const data = await response.json();
-      if (levels) {
-        const packages = allDeps(data);
-        await fetcher(packages, levels-1, res);
-      }
+      const packages = allDeps(data);
+      await fetcher(packages, levels-1, res);
       const { funding } = data;
       res[packageName] = funding;
     } else {
