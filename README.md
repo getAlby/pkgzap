@@ -1,3 +1,7 @@
+<p align="center">
+  <img width="100%" src="docs/Header.png">
+</p>
+
 # npm-fund-ln
 
 An easy way to get the funding details of all the dependencies used in your project and send satoshis. Uses the metadata provided by package registries to fetch information about each dependency's funding sources.
