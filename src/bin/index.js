@@ -18,12 +18,34 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+const homedir = os.homedir();
+const nwcPath = `${homedir}/.fund-ln`;
+
 function waitForInput(question) {
   return new Promise(resolve => {
     rl.question(question, (answer) => {
       resolve(answer);
     });
   });
+}
+
+async function authenticate() {
+  const nwc = webln.NostrWebLNProvider.withNewSecret();
+  const url = await nwc.getAuthorizationUrl({ name: 'npm-fund-ln' });
+  console.log(chalk.green(`Please approve the NWC connection: ${chalk.blue.underline(url)}`))
+  await waitForInput(`And press enter/return to continue...`);
+
+  const nwcData = nwc.getNostrWalletConnectUrl();
+  console.log("Saving the NostrWalletConnect URL...");
+  fs.writeFile(nwcPath, nwcData, (err) => {
+    if (err) {
+      console.error(chalk.red("Error saving NostrWalletConnect URL"));
+      console.error(chalk.red(err.error || err));
+      return;
+    }
+    console.log(chalk.green(`Saved in ${nwcPath}`));
+  });
+  return nwc;
 }
 
 async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
@@ -36,7 +58,15 @@ async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
     console.info(chalk.yellow(packageName + ": ") + chalk.green(`Payment Successful!`));
   }
   catch (e) {
-    console.error(chalk.yellow(packageName + ": ") + chalk.red(e.error || e));
+    console.error(chalk.red(e.error || e));
+    console.error(chalk.yellow("Try again to authenticate."));
+    fs.writeFile(nwcPath, "", (err) => {
+      if (err) {
+        console.error(chalk.red("Error removing NostrWalletConnect URL"));
+        console.error(chalk.red(err.error || err));
+        return;
+      }
+    });
     console.error(chalk.red("Aborting..."));
     process.exit(1);
   }
@@ -52,36 +82,17 @@ export async function cli() {
     console.log(chalk.yellow(`Excluding indirect dependencies...`))
   }
 
-  const homedir = os.homedir();
-
   let nwc;
   try {
-    try {
-      const nwcURL = await fs.promises.readFile(`${homedir}/.fund-ln`, 'utf8');
-      console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
-      nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
-    } catch (e) {
-      nwc = webln.NostrWebLNProvider.withNewSecret();
-      const url = await nwc.getAuthorizationUrl({ name: 'npm-ln' });
-      console.log(chalk.green(`Please approve the NWC connection: ${chalk.blue.underline(url)}`))
-      await waitForInput(`And press enter/return to continue...`);
-
-      const nwcData = nwc.getNostrWalletConnectUrl();
-      console.log("Saving the NostrWalletConnect URL...");
-      fs.writeFile(`${homedir}/.fund-ln`, nwcData, (err) => {
-        if (err) {
-          console.error(chalk.red(err.error || err));
-          return;
-        }
-        console.log(chalk.green(`Saved in ${homedir}/.fund-ln`));
-      });
-    }
-    await nwc.enable();
+    const nwcURL = await fs.promises.readFile(nwcPath, 'utf8');
+    if (!nwcURL) throw new Error();
+    console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
+    nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
   } catch (e) {
-    console.error(chalk.red(e.error || e));
-    process.exit(1);
+    nwc = await authenticate();
   }
 
+  await nwc.enable();
   const fundingInfo = await getFundingDetails({includeIndirectDeps});
   const deps = Object.keys(fundingInfo).length;
   console.log(chalk.cyan(`Found ${deps} dependencies with lightning details.`))
