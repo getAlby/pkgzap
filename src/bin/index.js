@@ -59,14 +59,16 @@ async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
   }
   catch (e) {
     console.error(chalk.red(e.error || e));
-    console.error(chalk.yellow("Try again to authenticate."));
-    fs.writeFile(nwcPath, "", (err) => {
-      if (err) {
-        console.error(chalk.red("Error removing NostrWalletConnect URL"));
-        console.error(chalk.red(err.error || err));
-        return;
-      }
-    });
+    if (e.error === 'The public key does not have a wallet connected.') {
+      console.error(chalk.yellow("Try again to authenticate."));
+      fs.writeFile(nwcPath, "", (err) => {
+        if (err) {
+          console.error(chalk.red("Error removing NostrWalletConnect URL"));
+          console.error(chalk.red(err.error || err));
+          return;
+        }
+      });
+    }
     console.error(chalk.red("Aborting..."));
     process.exit(1);
   }
@@ -75,11 +77,11 @@ async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
 
 export async function cli() {
   const amount = await waitForInput(chalk.magenta(`Enter an amount: `));
-  const ans = await waitForInput(`Do you wish to include indirect dependencies (deps of deps)? (Y/N): `);
-  const includeIndirectDeps = (ans.toLowerCase() === "y" || ans.toLowerCase() === "yes") ? true : false;
+  const levels = await waitForInput(chalk.magenta(`Number of levels of indirect dependencies to include (>=1): `));
 
-  if (!includeIndirectDeps) {
-    console.log(chalk.yellow(`Excluding indirect dependencies...`))
+  if (parseInt(levels)<1) {
+    console.log(chalk.red(`Invalid levels specified. Required Integer >= 1, received ${levels}`));
+    process.exit();
   }
 
   let nwc;
@@ -93,11 +95,11 @@ export async function cli() {
   }
 
   await nwc.enable();
-  const fundingInfo = await getFundingDetails({includeIndirectDeps});
+  const fundingInfo = await getFundingDetails('package.json', levels);
   const deps = Object.keys(fundingInfo).length;
   console.log(chalk.cyan(`Found ${deps} dependencies with lightning details.`))
-  for (const [pkgName, fundInfo] of Object.entries(fundingInfo)) {
-    await payLNDependencyOwner(nwc, pkgName, fundInfo.funding.url, Math.floor(amount/deps));
+  for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
+    await payLNDependencyOwner(nwc, pkgName, lnAddress, Math.floor(amount/deps));
   }
 
   process.exit();
