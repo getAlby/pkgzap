@@ -32,13 +32,11 @@
     "dev": "microbundle watch"
   },
   "dependencies": {
-    "@npmcli/arborist": "^6.2.8",
     "alby-js-sdk": "^1.6.0",
     "alby-tools": "^2.2.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
-    "libnpmfund": "^4.0.16",
     "websocket-polyfill": "^0.0.3"
   },
   "devDependencies": {

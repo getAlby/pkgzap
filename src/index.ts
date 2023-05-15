@@ -1,7 +1,17 @@
-import Arborist from "@npmcli/arborist";
-import { readTree } from "./getFunding";
+import { readFile } from "fs/promises";
 
 export { cli } from "./bin/index.js";
+
+async function getPackageJson(path) {
+  try {
+    const packageJsonData = await readFile(path, 'utf-8');
+    const packageJson = JSON.parse(packageJsonData);
+    return packageJson;
+  } catch (error) {
+    console.error('Error reading package.json:', error);
+    return null;
+  }
+}
 
 function allDeps(json) {
   const deps: string[] = [];
@@ -66,23 +76,8 @@ export async function fetchFundingInfo(json, levels = 1) {
   return lnPackages;
 }
 
-export async function getFundingDetails(options?: {includeIndirectDeps: false}) {
-  const arborist = new Arborist();
-  const tree = await arborist.buildIdealTree();
-
-  if (!options || !options.includeIndirectDeps) {
-    const actualChildren = new Map();
-
-    tree.edgesOut.forEach((value, key) => {
-      const node = tree.children.get(key);
-      node.edgesOut = new Map();
-      actualChildren.set(key, node);
-    });
-
-    tree.children = actualChildren;
-  }
-
-  const packagesInfo = await readTree(tree);
-
-  return packagesInfo.dependencies;
+export async function getFundingDetails(path: string = "package.json", levels: number = 1) {
+  const json = await getPackageJson(path);
+  const packageInfo = await fetchFundingInfo(json, levels);
+  return packageInfo;
 }
