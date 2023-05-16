@@ -77,12 +77,6 @@ async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
 
 export async function cli() {
   const amount = await waitForInput(chalk.magenta(`Enter an amount: `));
-  const levels = await waitForInput(chalk.magenta(`Number of levels of indirect dependencies to include (>=1): `));
-
-  if (parseInt(levels)<1) {
-    console.log(chalk.red(`Invalid levels specified. Required Integer >= 1, received ${levels}`));
-    process.exit();
-  }
 
   let nwc;
   try {
@@ -95,7 +89,7 @@ export async function cli() {
   }
 
   await nwc.enable();
-  const fundingInfo = await getFundingDetails('package.json', levels);
+  const fundingInfo = await getFundingDetails('package.json');
   const deps = Object.keys(fundingInfo).length;
   console.log(chalk.cyan(`Found ${deps} dependencies with lightning details.`))
   for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
