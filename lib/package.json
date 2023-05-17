@@ -1,0 +1,53 @@
+{
+  "name": "fund-ln-lib",
+  "version": "1.0.0",
+  "description": "View funding information of your dependencies and tip them via lightning",
+  "type": "module",
+  "source": "src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.module.js",
+  "unpkg": "./dist/index.umd.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "lightning",
+    "bitcoin",
+    "alby"
+  ],
+  "exports": {
+    "require": "./dist/index.cjs",
+    "default": "./dist/index.modern.js"
+  },
+  "bin": {
+    "fund-ln": "./bin/fund.js"
+  },
+  "scripts": {
+    "prebuild": "yarn run clean",
+    "prepack": "yarn run build",
+    "test": "jest",
+    "clean": "rm -rf dist",
+    "build": "microbundle",
+    "dev": "microbundle watch"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.0",
+    "microbundle": "^0.15.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/getAlby/npm-fund-ln.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "author": "Alby Contributors",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/getAlby/npm-fund-ln/issues"
+  },
+  "homepage": "https://github.com/getAlby/npm-fund-ln#readme"
+}
