@@ -1,7 +1,5 @@
 import { readFile } from "fs/promises";
 
-export { cli } from "./bin/index.js";
-
 async function getPackageJson(path) {
   try {
     const packageJsonData = await readFile(path, 'utf-8');
