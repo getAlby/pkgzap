@@ -1,6 +1,6 @@
 {
   "name": "fund-ln-cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "View funding information of your dependencies and tip them via lightning",
   "type": "module",
   "main": "bin/index.js",
@@ -20,12 +20,16 @@
     "alby-tools": "^2.2.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
-    "fund-ln-lib": "^1.0.0",
+    "fund-ln-lib": "^1.0.2",
     "websocket-polyfill": "^0.0.3"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getAlby/npm-fund-ln.git"
+  },
+  "funding": {
+    "type": "lightning",
+    "url": "hello@getalby.com"
   },
   "engines": {
     "node": ">=14 <19"

@@ -87,10 +87,20 @@ export async function cli() {
   }
 
   await nwc.enable();
-  const packageJsonData = await fs.promises.readFile('package.json', 'utf8');
-  const fundingInfo = await fetchFundingInfo(JSON.parse(packageJsonData));
+
+  let packageJsonData
+  try {
+    packageJsonData = await fs.promises.readFile('package.json', 'utf8');
+  } catch (e) {
+    console.error(chalk.red("Error reading package.json, does it exist?"));
+    console.error(chalk.red("Aborting..."));
+    process.exit(1);
+  }
+
+  const fundingInfo = await fetchFundingInfo(JSON.parse(packageJsonData), 1, process);
   const deps = Object.keys(fundingInfo).length;
-  console.log(chalk.cyan(`Found ${deps} dependencies with lightning details.`))
+  process.stdout.clearLine(0);
+  console.log(chalk.cyan(`\rFound ${deps} dependencies with lightning details.`))
   for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
     await payLNDependencyOwner(nwc, pkgName, lnAddress, Math.floor(amount/deps));
   }
