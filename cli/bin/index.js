@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import {webln} from 'alby-js-sdk'
 import { LightningAddress } from 'alby-tools'
 import chalk from 'chalk'
