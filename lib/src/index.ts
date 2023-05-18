@@ -1,8 +1,10 @@
-import { readFile } from "fs/promises";
-
 async function getPackageJson(path) {
   try {
-    const packageJsonData = await readFile(path, 'utf-8');
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
+    const packageJsonData = await response.text();
     const packageJson = JSON.parse(packageJsonData);
     return packageJson;
   } catch (error) {
