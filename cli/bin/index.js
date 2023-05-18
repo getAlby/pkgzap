@@ -34,7 +34,7 @@ async function authenticate() {
   await waitForInput(`And press enter/return to continue...`);
 
   const nwcData = nwc.getNostrWalletConnectUrl();
-  console.log("Saving the NostrWalletConnect URL...");
+  console.log("Authentication Successful. Saving the NostrWalletConnect URL...");
   fs.writeFile(nwcPath, nwcData, (err) => {
     if (err) {
       console.error(chalk.red("Error saving NostrWalletConnect URL"));
@@ -74,19 +74,7 @@ async function payLNDependencyOwner(nwc, packageName, lnAddress, amount) {
 }
 
 export async function cli() {
-  const amount = await waitForInput(chalk.magenta(`Enter an amount: `));
-
-  let nwc;
-  try {
-    const nwcURL = await fs.promises.readFile(nwcPath, 'utf8');
-    if (!nwcURL) throw new Error();
-    console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
-    nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
-  } catch (e) {
-    nwc = await authenticate();
-  }
-
-  await nwc.enable();
+  console.log(chalk.yellow(`Send sats to your project's dependencies!`))
 
   let packageJsonData
   try {
@@ -101,6 +89,24 @@ export async function cli() {
   const deps = Object.keys(fundingInfo).length;
   process.stdout.clearLine(0);
   console.log(chalk.cyan(`\rFound ${deps} dependencies with lightning details.`))
+
+  const amount = await waitForInput(chalk.magenta(`How much do you want to send in total? Amount (in sats): `));
+
+  let nwc;
+  try {
+    const nwcURL = await fs.promises.readFile(nwcPath, 'utf8');
+    if (!nwcURL) throw new Error();
+    console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
+    nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
+  } catch (e) {
+    nwc = await authenticate();
+  }
+
+  await nwc.enable();
+
+  const satsPerDep = Math.floor(amount/deps);
+  console.log(`Supporting ${deps} packages with ${satsPerDep} sats each...`);
+
   for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
     await payLNDependencyOwner(nwc, pkgName, lnAddress, Math.floor(amount/deps));
   }
