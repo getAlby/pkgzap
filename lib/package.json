@@ -1,6 +1,6 @@
 {
   "name": "fund-ln-lib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "View funding information of your dependencies and tip them via lightning",
   "type": "module",
   "source": "src/index.ts",
