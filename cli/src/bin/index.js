@@ -3,15 +3,12 @@ import { LightningAddress } from 'alby-tools'
 import chalk from 'chalk'
 import fs from 'fs'
 import readline from 'readline'
-import dotenv from 'dotenv'
 import 'websocket-polyfill';
 import * as crypto from 'node:crypto';
-import { getFundingDetails } from "../index";
+import { fetchFundingInfo } from "fund-ln-lib";
 import os from 'os';
 
 global.crypto = crypto;
-
-dotenv.config();
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -89,7 +86,8 @@ export async function cli() {
   }
 
   await nwc.enable();
-  const fundingInfo = await getFundingDetails('package.json');
+  const packageJsonData = await fs.promises.readFile('package.json', 'utf8');
+  const fundingInfo = await fetchFundingInfo(JSON.parse(packageJsonData));
   const deps = Object.keys(fundingInfo).length;
   console.log(chalk.cyan(`Found ${deps} dependencies with lightning details.`))
   for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
@@ -99,3 +97,5 @@ export async function cli() {
   process.exit();
 
 }
+
+cli()
