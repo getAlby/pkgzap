@@ -3,14 +3,17 @@
   "version": "1.0.0",
   "description": "View funding information of your dependencies and tip them via lightning",
   "type": "module",
-  "source": "src/bin/index.js",
+  "main": "bin/index.js",
   "keywords": [
     "lightning",
     "bitcoin",
     "alby"
   ],
   "bin": {
-    "fund-ln": "./src/bin/index.js"
+    "fund-ln": "./bin/index.js"
+  },
+  "scripts": {
+    "fund-ln": "node bin/index.js"
   },
   "dependencies": {
     "alby-js-sdk": "^1.6.0",
@@ -25,7 +28,7 @@
     "url": "git+https://github.com/getAlby/npm-fund-ln.git"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=14 <19"
   },
   "author": "Alby Contributors",
   "license": "MIT",
