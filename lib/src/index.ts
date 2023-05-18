@@ -36,7 +36,10 @@ function allDeps(json) {
 async function fetcher(packages: string[], levels: number, res = {}, process: NodeJS.Process | null = null) {
   if (!levels) return res;
   for (const packageName of packages) {
-    if (process) process.stdout.write('\r' + "Analyzing package: " + packageName);
+    if (process) {
+      process.stdout.clearLine(0);
+      process.stdout.write("\rAnalyzing package: " + packageName);
+    }
     const url = `https://registry.npmjs.org/${packageName}/latest`;
     const response = await fetch(url, {
       method: 'GET',
