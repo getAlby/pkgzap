@@ -36,15 +36,15 @@ function allDeps(json) {
 async function fetcher(packages: string[], levels: number, res = {}, process: NodeJS.Process | null = null) {
   if (!levels) return res;
   for (const packageName of packages) {
-    if (process) {
-      process.stdout.clearLine(0);
-      process.stdout.write("\rAnalyzing package: " + packageName);
-    }
     const url = `https://registry.npmjs.org/${packageName}/latest`;
     const response = await fetch(url, {
       method: 'GET',
       cache: 'force-cache'
     });
+    if (process) {
+      process.stdout.clearLine(0);
+      process.stdout.write("\rAnalyzing package: " + packageName);
+    }
     if (response.ok) {
       const data = await response.json();
       const packages = allDeps(data);
@@ -62,7 +62,7 @@ export async function fetchFundingInfo(json, levels = 1, process: NodeJS.Process
   const packages = allDeps(json);
   const results: Record<string, undefined | string | {type?: string, url?: string} | {type?: string, url?: string}[]> = {};
 
-  if (process) process.stdout.write("Fetching information from packages...");
+  if (process) process.stdout.write("Analyzing your package.json...");
   await fetcher(packages, levels, results, process);
 
   const lnPackages = {};
