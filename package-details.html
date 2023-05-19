@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alby | Fund LN</title>
+  <link rel="icon" href="./assets/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+</head>
+<body>
+  <div class="relative flex flex-col items-center justify-center pt-12 pb-24 bg-gradient-to-tr var(--tw-gradient-from) from-amber-200 to-amber-500">
+    <a href="/">
+      <img class="w-48 mb-5" src="./assets/alby-fund-ln.png" alt="Logo">
+    </a>
+    <h1 class="text-6xl font-bold mb-2" id="packageName" style="font-family: 'Catamaran';">Fund LN</h1>
+    <h3 class="text-sm font-bold mb-8" id="packageDescription">Send sats to your project dependencies via Lightning</h3>
+
+    <div id="fundingUnavailable" class="hidden text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
+      <p>LN Funding details are not available for this package</p>
+      <a id="depLink" href="#" class="underline">Tell the dependency owner to add LN info?</a>
+    </div>
+    <div id="packageDNE" class="hidden text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
+      <p>The package you searched for does not exist.</p>
+    </div>
+    <a id="boostButton" href="lightning:adithya@getalby.com" class="hidden mb-8">
+      <div class="text-white bg-gradient-to-tr from-purple-400 via-red-500 to-yellow-500 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-bold rounded-full text-lg px-5 py-2.5 text-center drop-shadow-lg">
+        Boost ⚡️
+      </div>
+    </a>
+
+    <a href="/" class="font-bold underline">< Back</a>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 33" width="375" height="33" fill="none" preserveAspectRatio="none" class="absolute bottom-0 w-full block" style=" height: 30px"><path fill="#FFFFFF" d="M685 327c0 180-223 326-497 326s-497-146-497-326C-309 146-86 0 188 0s497 146 497 327Z"></path></svg>
+  </div>
+  <script src="package-details.js"></script>
+</body>
+</html>
