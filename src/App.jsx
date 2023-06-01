@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { BoostButton } from 'boost-button';
 import React from 'react';
 import { useState } from 'react';
 
@@ -52,6 +53,9 @@ function App() {
       </form> : <>
         {packageDNE && <div className="text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
           <p>The package you searched for does not exist.</p>
+        </div>}
+        {!packageDNE && lnAddress && <div className="mb-8">
+          <BoostButton lnurl={lnAddress} expanded/>
         </div>}
         {!packageDNE && !lnAddress && <div className="text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
           <p>LN Funding details are not available for this package</p>
