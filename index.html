@@ -1,122 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alby | Fund LN</title>
-  <link rel="icon" href="./assets/favicon.png">
-  <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@900&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-  <div class="relative flex flex-col items-center justify-center pt-12 pb-24 bg-gradient-to-tr var(--tw-gradient-from) from-amber-200 to-amber-500">
-    <img class="w-48 mb-5" src="./assets/alby-fund-ln.png" alt="Logo">
-    <h1 class="text-6xl font-bold mb-2" style="font-family: 'Catamaran';">Fund LN</h1>
-    <h3 class="text-sm font-bold mb-8">Send sats to your project dependencies via Lightning</h3>
-    <form id="search-form" class="w-80">   
-      <label for="package-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-      <div class="relative">
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-          <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-        </div>
-        <input type="search" id="search-input" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-neutral-500 focus:border-neutral-500" placeholder="Search Packages..." required>
-        <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-neutral-800 hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-full text-sm px-4 py-2">Search</button>
-      </div>
-    </form>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 33" width="375" height="33" fill="none" preserveAspectRatio="none" class="absolute bottom-0 w-full block" style=" height: 30px"><path fill="#F9FAFB" d="M685 327c0 180-223 326-497 326s-497-146-497-326C-309 146-86 0 188 0s497 146 497 327Z"></path></svg>
-  </div>
-
-  <div class="flex flex-col items-center justify-center py-12 bg-gray-50">
-    <h1 class="text-5xl font-bold mb-6" style="font-family: 'Catamaran';">Install Fund LN</h1>
-    <div class="flex items-center mb-4">
-      <div class="bg-slate-100 border border-gray-300 rounded-lg px-4 py-1 mr-2">
-        <code class="text-red-500 text-sm">yarn add fund-ln-cli</code>
-      </div>
-      <code class="text-red-500 text-sm mr-2">OR</code>
-      <div class="bg-slate-100 border border-gray-300 rounded-lg px-4 py-1">
-        <code class="text-red-500 text-sm">npm i fund-ln-cli</code>
-      </div>
-    </div>
-    <div class="flex items-center">
-      <p class="text-sm font-bold mr-2">And then do</p>
-      <div class="bg-neutral-800 border rounded-lg px-2 py-1 mr-2">
-        <code class="text-green-300 text-sm">npx fund-ln</code>
-      </div>
-      <p class="text-sm font-bold">to boost ⚡️ your dependencies</p>
-    </div>
-  </div>
-
-  <div class="flex flex-col items-center justify-center pt-12 pb-12 bg-gradient-to-tr var(--tw-gradient-from) from-amber-200 to-amber-500">
-    <h1 class="text-5xl font-bold mb-6" style="font-family: 'Catamaran';">How does it work?</h1>
-    <p class="text-lg font-bold mb-4">First, it fetches the funding information from the dependencies</p>
-    <div class="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-      <code class="text-gray-100">$ npx fund-ln</code>
-      <code class="text-yellow-300">Send sats to your project's dependencies!</code>
-      <code class="text-gray-100">Analyzing your package.json...</code>
-      <code class="text-gray-100">Analyzing package: alby-tools</code>
-      <code class="text-gray-100">Analyzing package: alby-js-sdk</code>
-      <code class="text-gray-100">...</code>
-      <code class="text-cyan-300">Found 4 dependencies with lightning details.</code>
-    </div>
-    <p class="text-lg font-bold mt-8 mb-4">Now you can enter your desired amount</p>
-    <div class="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-      <code class="text-gray-100">...</code>
-      <code class="text-cyan-300">Found 4 dependencies with lightning details.</code>
-      <div>
-        <code class="text-purple-300">How much do you want to send in total? Amount (in sats): </code>
-        <code class="text-gray-100">400</code>
-      </div>
-      <div>
-        <code class="text-green-400 mr-2">Please approve the NWC connection:</code>
-        <code class="text-blue-400 underline">https://nwc.getalby.com/...</code>
-      </div>
-      <code class="text-gray-100">And press enter/return to continue...</code>
-    </div>
-    <p class="text-lg font-bold mt-8 mb-4">Approve the NWC connection by clicking on the link and done! 🚀</p>
-    <div class="flex flex-col bg-neutral-800 text-sm rounded-lg p-3">
-      <code class="text-gray-100">...</code>
-      <code class="text-gray-100">And press enter/return to continue...</code>
-      <code class="text-gray-100">Authentication Successful. Saving the NostrWalletConnect URL...</code>
-      <code class="text-green-400 mr-2">Saved in /Users/satoshi/.fund-ln</code>
-      <code class="text-gray-100">Supporting 4 packages with 100 sats each...</code>
-      <div>
-        <code class="text-yellow-400 mr-2">alby-tools:</code>
-        <code class="text-green-400 ">Payment Successful!</code>
-      </div>
-      <div>
-        <code class="text-yellow-400 mr-2">ln-package:</code>
-        <code class="text-green-400">Payment Successful!</code>
-      </div>
-      <div>
-        <code class="text-yellow-400 mr-2">awesome-nostr:</code>
-        <code class="text-green-400">Payment Successful!</code>
-      </div>
-      <div>
-        <code class="text-yellow-400 mr-2">nostr-ln:</code>
-        <code class="text-green-400">Payment Successful!</code>
-      </div>
-    </div>
-  </div>
-  <div class="bg-neutral-800">
-    <a href="https://www.getalby.com">
-      <img class="w-24 py-2 m-auto" src="./assets/alby-logo-dark.svg" alt="Alby logo">
-    </a>
-  </div>
-</body>
-
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const searchForm = document.getElementById('search-form');
-    const searchInput = document.getElementById('search-input');
-
-    searchForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const packageName = searchInput.value.trim();
-      if (packageName) {
-        console.log(packageName)
-        window.location.href = `package-details.html?package=${packageName}`;
-      }
-    });
-  });
-</script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alby | Fund LN</title>
+    <link rel="icon" href="./assets/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Catamaran:wght@900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

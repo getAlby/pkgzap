@@ -46,6 +46,18 @@ npm fund-ln
 
 ## 🛠 Development
 
+### Landing Page
+```
+yarn install
+yarn run dev
+```
+
+And for styling:
+```
+npx tailwindcss -i ./src/input.css -o ./src/index.css --watch
+```
+
+### lib and cli
 ```
 yarn install
 yarn run build
