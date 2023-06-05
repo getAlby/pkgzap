@@ -11,6 +11,29 @@ import os from 'os';
 
 global.crypto = crypto;
 
+function encryptData(data, password) {
+  const salt = crypto.randomBytes(16);
+  const key = crypto.pbkdf2Sync(password, salt, 10000, 32, 'sha256');
+  const iv = crypto.randomBytes(16);
+  let cipher = crypto.createCipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let encrypted = cipher.update(data);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+  return salt.toString('hex') + iv.toString('hex') + encrypted.toString('hex')
+}
+
+function decryptData(cipher, password) {
+  const salt = Buffer.from(cipher.slice(0, 32), 'hex');
+  const iv = Buffer.from(cipher.slice(32, 64), 'hex');
+  const key = crypto.pbkdf2Sync(password, salt, 10000, 32, 'sha256');
+  let encryptedText = Buffer.from(cipher.slice(64), 'hex');
+
+  let decipher = crypto.createDecipheriv('aes-256-cbc', Buffer.from(key), iv);
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+  return decrypted.toString();
+}
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
@@ -35,7 +58,8 @@ async function authenticate() {
 
   const nwcData = nwc.getNostrWalletConnectUrl();
   console.log("Authentication Successful. Saving the NostrWalletConnect URL...");
-  fs.writeFile(nwcPath, nwcData, (err) => {
+  const password = await waitForInput(chalk.magenta(`Enter a password to encrypt the NWC URL:`));
+  fs.writeFile(nwcPath, encryptData(nwcData, password), (err) => {
     if (err) {
       console.error(chalk.red("Error saving NostrWalletConnect URL"));
       console.error(chalk.red(err.error || err));
@@ -94,11 +118,15 @@ export async function cli() {
 
   let nwc;
   try {
-    const nwcURL = await fs.promises.readFile(nwcPath, 'utf8');
-    if (!nwcURL) throw new Error();
+    const nwcData = await fs.promises.readFile(nwcPath, 'utf8');
+    if (!nwcData) throw new Error("no nwc data");
     console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
-    nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: nwcURL });
+    const password = await waitForInput(chalk.magenta(`Enter your password to decrypt the NWC URL:`));
+    nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: decryptData(nwcData, password) });
   } catch (e) {
+    if (e.message.indexOf("bad decrypt") !== -1) {
+      console.log(chalk.red('Invalid password, authenticate again.'));
+    }
     nwc = await authenticate();
   }
 
