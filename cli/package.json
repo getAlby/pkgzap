@@ -1,7 +1,7 @@
 {
   "name": "fund-ln-cli",
-  "version": "1.0.3",
-  "description": "View funding information of your dependencies and tip them via lightning",
+  "version": "1.0.4",
+  "description": "Boost your project dependencies via lightning ⚡️",
   "type": "module",
   "main": "bin/index.js",
   "keywords": [
@@ -29,7 +29,7 @@
   },
   "funding": {
     "type": "lightning",
-    "url": "hello@getalby.com"
+    "url": "lightning:hello@getalby.com"
   },
   "engines": {
     "node": ">=14 <19"
