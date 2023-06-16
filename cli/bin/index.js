@@ -58,7 +58,7 @@ async function authenticate() {
 
   const nwcData = nwc.getNostrWalletConnectUrl();
   console.log("Authentication Successful. Saving the NostrWalletConnect URL...");
-  const password = await waitForInput(chalk.magenta(`Enter a password to encrypt the NWC URL:`));
+  const password = await waitForInput(chalk.magenta(`Enter a password to encrypt the NWC URL: `));
   fs.writeFile(nwcPath, encryptData(nwcData, password), (err) => {
     if (err) {
       console.error(chalk.red("Error saving NostrWalletConnect URL"));
