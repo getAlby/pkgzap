@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100%" src="docs/Header.png">
+  <img width="100%" src="docs/npm-fund-ln.png">
 </p>
 
 # npm-fund-ln
@@ -7,42 +7,45 @@
 An easy way to get the funding details of all the dependencies used in your project and send satoshis. Uses the metadata provided by package registries to fetch information about each dependency's funding sources.
 
 ## 🚀 Quick Start
+### fund-ln-cli
+
+Install the package by running
+```bash
+npm i fund-ln-cli
+```
+and run it in your project's folder with
+```bash
+npx fund-ln
+```
+
+[See more here](/cli/README.md)
+
+### fund-ln-lib
 
 ```
-npm install npm-fund-ln
+npm install fund-ln-lib
 ```
+### `getFundingDetails`
 
-## 🤙 Usage
-### getFundingDetails
 ```js
-import { getFundingDetails } from "npm-fund-ln";
+import { getFundingDetails } from "fund-ln-lib";
 
 const fundingInfo = getFundingDetails();
 
 console.log(JSON.stringify(fundingInfo, null, 2))
-
 ```
 
-#### 💡 `includeIndirectDeps`
-If you need all the dependencies, i.e. deps being used by the deps you use, you can set the `includeIndirectDeps` to true
+### `fetchFundingInfo`
+ 
 ```js
-import { getFundingDetails } from "npm-fund-ln";
+import { fetchFundingInfo } from "npm-fund-ln";
 
-const fundingInfo = getFundingDetails({includeIndirectDeps: true});
+const fundingInfo = fetchFundingInfo(packageJsonData); // depth is defaulted to 1
 
 console.log(JSON.stringify(fundingInfo, null, 2))
-
 ```
 
-### In the CLI
-Install the package by running
-```bash
-npm install -g npm-fund-ln
-```
-and run it with
-```bash
-npm fund-ln
-```
+[See more here](/lib/README.md)
 
 ## 🛠 Development
 
