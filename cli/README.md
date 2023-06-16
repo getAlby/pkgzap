@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100%" src="../docs/fund-ln-cli.png">
+  <img width="100%" src="docs/fund-ln-cli.png">
 </p>
 
 # fund-ln-cli
