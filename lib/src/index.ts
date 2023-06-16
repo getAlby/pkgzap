@@ -74,7 +74,8 @@ export async function fetchFundingInfo(json, levels = 1, process: NodeJS.Process
         if (lnFunding) lnPackages[key] = lnFunding.url;
       } else {
         if (value.type === 'lightning') {
-          lnPackages[key] = value.url;
+          const lnAddress = value.url
+          lnPackages[key] = (lnAddress && lnAddress.startsWith("lightning:")) ? lnAddress.substring(10) : lnAddress;
         }
       }
     }
