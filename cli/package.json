@@ -1,6 +1,6 @@
 {
   "name": "fund-ln-cli",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Boost your project dependencies via lightning ⚡️",
   "type": "module",
   "main": "bin/index.js",
@@ -20,7 +20,7 @@
     "alby-tools": "^2.2.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
-    "fund-ln-lib": "^1.0.3",
+    "fund-ln-lib": "^1.1.0",
     "websocket-polyfill": "^0.0.3"
   },
   "repository": {
