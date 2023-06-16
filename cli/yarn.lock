@@ -157,10 +157,10 @@ ext@^1.1.2:
   dependencies:
     type "^2.7.2"
 
-fund-ln-lib@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/fund-ln-lib/-/fund-ln-lib-1.0.3.tgz#9ec9f085add30c066c9a2740d83ec6781ab111f7"
-  integrity sha512-neYc+RLDDJEWZ3jtKYFV5B0evxjFVWFpTHXLP9INi4KsAD6OWNvktMlrV2zI88W4Vg4QrEGoQaqcG1cmfo7iVg==
+fund-ln-lib@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/fund-ln-lib/-/fund-ln-lib-1.1.0.tgz#70f5f5642b9a0c19ecee076848cd7974d7d29ffe"
+  integrity sha512-xiZ+rFcRhK3FRTzP7im6pxEnK3MzBgdjAatRA6z8WXgj7ztecJcKE+ycunEKyB8LAD2dz0kDrsM6jKgCg+G9GA==
 
 has-flag@^4.0.0:
   version "4.0.0"

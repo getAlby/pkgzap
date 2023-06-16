@@ -121,7 +121,7 @@ export async function cli() {
     const nwcData = await fs.promises.readFile(nwcPath, 'utf8');
     if (!nwcData) throw new Error("no nwc data");
     console.log(chalk.cyan('Trying to fetch NWC with the provided URL...'));
-    const password = await waitForInput(chalk.magenta(`Enter your password to decrypt the NWC URL:`));
+    const password = await waitForInput(chalk.magenta(`Enter your password to decrypt the NWC URL: `));
     nwc = new webln.NostrWebLNProvider({ nostrWalletConnectUrl: decryptData(nwcData, password) });
   } catch (e) {
     if (e.message.indexOf("bad decrypt") !== -1) {
