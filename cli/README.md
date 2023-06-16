@@ -12,7 +12,7 @@ Install the package by running
 ```bash
 npm i fund-ln-cli
 ```
-and run it with
+and run it in your project's folder with
 ```bash
 npx fund-ln
 ```
