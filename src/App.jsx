@@ -3,6 +3,9 @@ import { BoostButton } from 'boost-button';
 import React from 'react';
 import { useState } from 'react';
 
+import AlbyLogo from '../assets/alby-logo-dark.svg';
+import FundLNLogo from '../assets/alby-fund-ln.png';
+
 function App() {
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -38,7 +41,7 @@ function App() {
   return (
   <div>
     <div className="relative flex flex-col items-center justify-center pt-12 pb-24 bg-gradient-to-tr from-[#FFDF6F] to-[#ECA572] via-[#F8C455]">
-      <img className="w-48 mb-5" src="./assets/alby-fund-ln.png" alt="Logo" />
+      <img className="w-48 mb-5" src={FundLNLogo} alt="Logo" />
       <h1 className="text-6xl font-bold mb-2" style={{fontFamily: 'Catamaran'}}>{searched && !packageDNE ? `< ${title} >` : "Fund LN"}</h1>
       <h3 className="text-sm font-bold mb-8">{searched && !packageDNE ? desc : "Send sats to your project dependencies via Lightning"}</h3>
       {!searched ? <form id="search-form" onSubmit={handleSubmit} className="w-80">   
@@ -149,7 +152,7 @@ function App() {
     </div>
     <div className="bg-neutral-800">
       <a href="https://www.getalby.com">
-        <img className="w-24 py-2 m-auto" src="./assets/alby-logo-dark.svg" alt="Alby logo" />
+        <img className="w-24 py-2 m-auto" src={AlbyLogo} alt="Alby logo" />
       </a>
     </div>
   </div>
