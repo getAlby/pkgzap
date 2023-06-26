@@ -90,7 +90,7 @@ function App() {
       <div className="flex items-center">
         <p className="text-sm font-bold mr-2">And then do</p>
         <div className="bg-neutral-800 border rounded-lg px-2 py-1 mr-2">
-          <code className="text-green-300 text-sm">npx fund-ln</code>
+          <code className="text-green-300 text-sm">npx fund-ln-cli</code>
         </div>
         <p className="text-sm font-bold">to boost ⚡️ your dependencies</p>
       </div>
@@ -119,10 +119,10 @@ function App() {
       <hr className="mt-12" />
 
       <h2 className="text-3xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>As a supporter</h2>
-      <p className="text-lg font-bold">Run the <i>npx fund-ln</i> command in your project directory.</p>
+      <p className="text-lg font-bold">Run the <i>npx fund-ln-cli</i> command in your project directory.</p>
       <p className="text-lg font-bold mb-4">First, it fetches the funding information from the package details by analyzing the dependencies</p>
       <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-        <code className="text-gray-100">$ npx fund-ln</code>
+        <code className="text-gray-100">$ npx fund-ln-cli</code>
         <code className="text-yellow-300">Send sats to your project's dependencies!</code>
         <code className="text-gray-100">Analyzing your package.json...</code>
         <code className="text-gray-100">Analyzing package: alby-tools</code>
