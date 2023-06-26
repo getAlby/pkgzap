@@ -43,15 +43,15 @@ function App() {
     <div className="relative flex flex-col items-center justify-center pt-12 pb-24 bg-gradient-to-tr from-[#FFDF6F] to-[#ECA572] via-[#F8C455]">
       <img className="w-48 mb-5" src={FundLNLogo} alt="Logo" />
       <h1 className="text-6xl font-bold mb-2" style={{fontFamily: 'Catamaran'}}>{searched && !packageDNE ? `< ${title} >` : "Fund LN"}</h1>
-      <h3 className="text-sm font-bold mb-8">{searched && !packageDNE ? desc : "Send sats to your project dependencies via Lightning"}</h3>
-      {!searched ? <form id="search-form" onSubmit={handleSubmit} className="w-80">   
+      <h3 className="text-sm font-bold mb-8">{searched && !packageDNE ? desc : "sats to your project dependencies via lightning"}</h3>
+      {!searched ? <form id="search-form" onSubmit={handleSubmit} className="w-80">
         <label htmlFor="package-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
           </div>
-          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} id="search-input" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-neutral-500 focus:border-neutral-500" placeholder="Search Packages..." required />
-          <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-neutral-800 hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-full text-sm px-4 py-2">Search</button>
+          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} id="search-input" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-neutral-500 focus:border-neutral-500" placeholder="package name..." required />
+          <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-neutral-800 hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-full text-sm px-4 py-2">Go</button>
         </div>
       </form> : <>
         {packageDNE && <div className="text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
@@ -93,7 +93,7 @@ function App() {
       <div className="flex items-center">
         <p className="text-sm font-bold mr-2">And then do</p>
         <div className="bg-neutral-800 border rounded-lg px-2 py-1 mr-2">
-          <code className="text-green-300 text-sm">npx fund-ln</code>
+          <code className="text-green-300 text-sm">npx fund-ln-cli</code>
         </div>
         <p className="text-sm font-bold">to boost ⚡️ your dependencies</p>
       </div>
@@ -101,9 +101,31 @@ function App() {
 
     <div className="flex flex-col items-center justify-center pt-12 pb-12 bg-gradient-to-tr from-[#FFDF6F] to-[#ECA572] via-[#F8C455]">
       <h1 className="text-5xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>How does it work?</h1>
-      <p className="text-lg font-bold mb-4">First, it fetches the funding information from the dependencies</p>
+      <h2 className="text-3xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>As a package developer</h2>
+      <p className="text-lg font-bold mb-4">As a package developer you only have to add the lightning address to your package.json file.</p>
       <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-        <code className="text-gray-100">$ npx fund-ln</code>
+        <code className="text-gray-100">$ vim package.json</code>
+        <code className="text-gray-100 mt-2">
+        ...<br />
+        "funding": &#123; <br />
+        &nbsp;&nbsp;"type": "lightning", <br />
+        &nbsp;&nbsp;"url": "adithya@getalby.com" <br />
+        &#125;, <br />
+        ...
+        </code>
+      </div>
+      <p className="text-lg">Have a look at <a className="underline" href="https://github.com/getAlby/alby-tools/blob/c1ad140d6c73acf356d4722bf6c3cfd91e0e6ed5/package.json#L11-L14">this example.</a></p>
+      <p className="text-sm mb-4">If you don't have a <a className="underline" href="https://lightningaddress.com/">lightning address</a> you can get one from <a className="underline" href="https://getalby.com">getalby.com</a></p>
+
+
+
+      <hr className="mt-12" />
+
+      <h2 className="text-3xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>As a supporter</h2>
+      <p className="text-lg font-bold">Run the <i>npx fund-ln-cli</i> command in your project directory.</p>
+      <p className="text-lg font-bold mb-4">First, it fetches the funding information from the package details by analyzing the dependencies</p>
+      <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
+        <code className="text-gray-100">$ npx fund-ln-cli</code>
         <code className="text-yellow-300">Send sats to your project's dependencies!</code>
         <code className="text-gray-100">Analyzing your package.json...</code>
         <code className="text-gray-100">Analyzing package: alby-tools</code>
@@ -111,7 +133,7 @@ function App() {
         <code className="text-gray-100">...</code>
         <code className="text-cyan-300">Found 4 dependencies with lightning details.</code>
       </div>
-      <p className="text-lg font-bold mt-8 mb-4">Now you can enter your desired amount</p>
+      <p className="text-lg font-bold mt-8 mb-4">Now you can enter your desired total amount you want to split among all supported dependencies</p>
       <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
         <code className="text-gray-100">...</code>
         <code className="text-cyan-300">Found 4 dependencies with lightning details.</code>
@@ -125,7 +147,8 @@ function App() {
         </div>
         <code className="text-gray-100">And press enter/return to continue...</code>
       </div>
-      <p className="text-lg font-bold mt-8 mb-4">Approve the NWC connection by clicking on the link and done! 🚀</p>
+      <p className="text-lg font-bold mt-8">Approve the wallet connection by clicking on the link and you're done! 🚀</p>
+      <p className="text-lg mb-4">Let the sats flow and support your favorit open source projects!</p>
       <div className="flex flex-col bg-neutral-800 text-sm rounded-lg p-3">
         <code className="text-gray-100">...</code>
         <code className="text-gray-100">And press enter/return to continue...</code>
