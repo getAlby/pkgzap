@@ -38,7 +38,7 @@ console.log(JSON.stringify(fundingInfo, null, 2))
 ### `fetchFundingInfo`
  
 ```js
-import { fetchFundingInfo } from "npm-fund-ln";
+import { fetchFundingInfo } from "fund-ln-lib";
 
 const fundingInfo = fetchFundingInfo(packageJsonData); // depth is defaulted to 1
 
