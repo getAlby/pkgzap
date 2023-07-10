@@ -1,182 +1,161 @@
 import axios from 'axios';
 import { BoostButton } from 'boost-button';
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import AlbyLogo from '../assets/alby-logo-dark.svg';
-import FundLNLogo from '../assets/alby-fund-ln.png';
+import Alby from '../assets/alby.png';
+import FundLNLogo from '../assets/fund-ln.png';
+import LightningDesignOrange from '../assets/ln-design-orange.png';
+import LightningDesignYellow from '../assets/ln-design-yellow.png';
+import FundLNLogoText from '../assets/fund-ln-text.png';
+import FundLNLogoDarkText from '../assets/fund-ln-text-dark.png';
+import PackageDetail from './PackageDetail';
 
 function App() {
-  const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState("");
-  const [searched, setSearched] = useState(false);
-  const [lnAddress, setLnAddress] = useState("");
-  const [packageDNE, setPackageDNE] = useState(false);
+  const urlParams = new URLSearchParams(window.location.search);
+  const packageName = urlParams.get('package');
+
+  if (packageName) {
+    return <PackageDetail packageName={packageName}/>;
+  }
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView();
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.get(`https://registry.npmjs.org/${query}/latest`);
-      const packageInfo = response.data;
-      const fundingInfo = packageInfo.funding;
-
-      setTitle(packageInfo.name)
-      setDesc(packageInfo.description)
-
-      if (!fundingInfo || (fundingInfo && fundingInfo.type !== "lightning")) {
-        setQuery("");
-        setSearched(true);
-        return;
-      }
-
-      setLnAddress(fundingInfo.url);
-    } catch (error) {
-      console.error(error);
-      setPackageDNE(true);
-    }
-    setQuery("");
-    setSearched(true);
+    const url = new URL(window.location);
+    url.searchParams.set("package", query);
+    window.history.pushState({}, "", url);
+    window.location.reload();
   }
+
   return (
   <div>
-    <div className="relative flex flex-col items-center justify-center pt-12 pb-24 bg-gradient-to-tr from-[#FFDF6F] to-[#ECA572] via-[#F8C455]">
-      <img className="w-48 mb-5" src={FundLNLogo} alt="Logo" />
-      <h1 className="text-6xl font-bold mb-2" style={{fontFamily: 'Catamaran'}}>{searched && !packageDNE ? `< ${title} >` : "Fund LN"}</h1>
-      <h3 className="text-sm font-bold mb-8">{searched && !packageDNE ? desc : "sats to your project dependencies via lightning"}</h3>
-      {!searched ? <form id="search-form" onSubmit={handleSubmit} className="w-80">
-        <label htmlFor="package-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+    <div className="pt-12 pb-24 min-h-screen bg-[url('../assets/lightning.png')]">
+      <div className="text-lg pl-12 font-mono flex flex-col items-start">
+        <p>getAlby/npm-fund-ln/cli</p>
+        <p>npm/fund-ln-cli</p>
+      </div>
+      <img className="w-96 my-10 mx-auto" src={FundLNLogo} alt="Logo" />
+      <img className="w-80 mt-10 mx-auto" src={FundLNLogoText} alt="Logo" />
+    </div>
+    <div>
+      <div style={{background: "linear-gradient(80deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="relative from-[#ffe0008a] from-5% via-yellow-200 via-30% to-[#ffffff99]">
+        <div className="flex flex-col items-center justify-center pt-12">
+          <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+          <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>How to use?</h1>
+          <div className='drop-shadow-md bg-gray-300 rounded-xl'>
+            <div className="shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-amber-200 rounded-xl px-12 py-3 m-1 text-2xl font-mono">
+              npx fund-ln-cli
+            </div>
           </div>
-          <input type="search" value={query} onChange={(e) => setQuery(e.target.value)} id="search-input" className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-neutral-500 focus:border-neutral-500" placeholder="package name..." required />
-          <button type="submit" className="text-white absolute right-2.5 bottom-2.5 bg-neutral-800 hover:bg-neutral-950 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-full text-sm px-4 py-2">Go</button>
+          <p className="mt-6 font-mono">Type this in your root directory and boost all your dependencies</p>
         </div>
-      </form> : <>
-        {packageDNE && <div className="text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
-          <p>The package you searched for does not exist.</p>
-        </div>}
-        {!packageDNE && lnAddress && <div className="mb-8">
-          <BoostButton lnurl={lnAddress} expanded/>
-        </div>}
-        {!packageDNE && !lnAddress && <div className="text-sm text-center font-medium px-6 py-8 mb-8 border-2 border-black rounded-lg">
-          <p>LN Funding details are not available for this package</p>
-          <a id="depLink" href={`https://www.npmjs.com/package/${title}`} className="underline">Tell the dependency owner to add LN info?</a>
-        </div>}
-        <div className="flex items-center cursor-pointer" onClick={() => {
-          setTitle("")
-          setDesc("")
-          setLnAddress("")
-          setPackageDNE(false)
-          setSearched(false)
-          setQuery("")
-        }}>
-          <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-          <p className="text-lg font-bold ml-1">Clear Search</p>
-        </div>
-      </>}
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 375 33" width="375" height="33" fill="none" preserveAspectRatio="none" className="absolute bottom-0 w-full block" style={{height: '30px'}}><path fill="#F9FAFB" d="M685 327c0 180-223 326-497 326s-497-146-497-326C-309 146-86 0 188 0s497 146 497 327Z"></path></svg>
-    </div>
-
-    <div className="flex flex-col items-center justify-center py-12 bg-gray-50">
-      <h1 className="text-5xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>Install Fund LN</h1>
-      <div className="flex items-center mb-4">
-        <div className="bg-slate-100 border border-gray-300 rounded-lg px-4 py-1 mr-2">
-          <code className="text-red-500 text-sm">yarn add fund-ln-cli</code>
-        </div>
-        <code className="text-red-500 text-sm mr-2">OR</code>
-        <div className="bg-slate-100 border border-gray-300 rounded-lg px-4 py-1">
-          <code className="text-red-500 text-sm">npm i fund-ln-cli</code>
+        <img className="absolute h-2/5" src={LightningDesignOrange} alt="Logo" />
+        <div id="developer" className="relative z-50 flex flex-col items-center justify-center py-12">
+          <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+          <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Developer</h1>
+          <p className="text-center font-mono">As a package developer you only have to add the</p>
+          <p className="text-center font-mono">lightning address to your package.json file.</p>
+          <p className="mt-6 font-mono mb-8">Have a look at <a href="https://github.com/getAlby/alby-tools/blob/c1ad140d6c73acf356d4722bf6c3cfd91e0e6ed5/package.json#L11-L14" className="underline">this example</a></p>
+          <div>
+            <p className="mb-2 font-mono text-left">~/package.json</p>
+            <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">
+              ...<br/>
+              {`"funding": {`}
+              <p className="ml-4">{`"type": "lightning",`}</p>
+              <p className="ml-4">{`"url": "lightning:hello@getalby.com"`}</p>
+              {`},`}<br/>
+              ...
+            </div>
+          </div>
         </div>
       </div>
-      <div className="flex items-center">
-        <p className="text-sm font-bold mr-2">And then do</p>
-        <div className="bg-neutral-800 border rounded-lg px-2 py-1 mr-2">
-          <code className="text-green-300 text-sm">npx fund-ln-cli</code>
+      <img className="absolute h-2/5 right-1/4" src={LightningDesignYellow} alt="Logo" />
+      <div className="flex flex-col items-center justify-center pb-12 bg-[length:120px] bg-[url('../assets/noise.png')]">
+        <img className="relative z-50 w-20 my-10 mx-auto" src={FundLNLogo} alt="Logo" />
+        <div className="relative z-50 flex items-center text-3xl font-bold text-neutral-700" style={{fontFamily: 'Catamaran'}}>
+          <div>
+            <p className="mb-2">If you don't have a</p>
+            <a href="https://lightningaddress.com/" className="inline-block mb-2 text-5xl text-amber-400">lightning address</a>
+            <p>Click on the bee!</p>
+          </div>
+          <a href="https://getalby.com/user/new" className="w-44 ml-36"><img src={Alby} alt="Logo" /></a>
         </div>
-        <p className="text-sm font-bold">to boost ⚡️ your dependencies</p>
+        <div className="grayscale opacity-20 bg-center bg-[length:16rem] mt-12 py-8 w-full bg-[url('../assets/alby-logo.png')]"></div>
       </div>
     </div>
-
-    <div className="flex flex-col items-center justify-center pt-12 pb-12 bg-gradient-to-tr from-[#FFDF6F] to-[#ECA572] via-[#F8C455]">
-      <h1 className="text-5xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>How does it work?</h1>
-      <h2 className="text-3xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>As a package developer</h2>
-      <p className="text-lg font-bold mb-4">As a package developer you only have to add the lightning address to your package.json file.</p>
-      <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-        <code className="text-gray-100">$ vim package.json</code>
-        <code className="text-gray-100 mt-2">
-        ...<br />
-        "funding": &#123; <br />
-        &nbsp;&nbsp;"type": "lightning", <br />
-        &nbsp;&nbsp;"url": "adithya@getalby.com" <br />
-        &#125;, <br />
-        ...
-        </code>
-      </div>
-      <p className="text-lg">Have a look at <a className="underline" href="https://github.com/getAlby/alby-tools/blob/c1ad140d6c73acf356d4722bf6c3cfd91e0e6ed5/package.json#L11-L14">this example.</a></p>
-      <p className="text-sm mb-4">If you don't have a <a className="underline" href="https://lightningaddress.com/">lightning address</a> you can get one from <a className="underline" href="https://getalby.com">getalby.com</a></p>
-
-
-
-      <hr className="mt-12" />
-
-      <h2 className="text-3xl font-bold mb-6" style={{fontFamily: 'Catamaran'}}>As a supporter</h2>
-      <p className="text-lg font-bold">Run the <i>npx fund-ln-cli</i> command in your project directory.</p>
-      <p className="text-lg font-bold mb-4">First, it fetches the funding information from the package details by analyzing the dependencies</p>
-      <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-        <code className="text-gray-100">$ npx fund-ln-cli</code>
-        <code className="text-yellow-300">Send sats to your project's dependencies!</code>
-        <code className="text-gray-100">Analyzing your package.json...</code>
-        <code className="text-gray-100">Analyzing package: alby-tools</code>
-        <code className="text-gray-100">Analyzing package: alby-js-sdk</code>
-        <code className="text-gray-100">...</code>
-        <code className="text-cyan-300">Found 4 dependencies with lightning details.</code>
-      </div>
-      <p className="text-lg font-bold mt-8 mb-4">Now you can enter your desired total amount you want to split among all supported dependencies</p>
-      <div className="flex flex-col text-sm bg-neutral-800 rounded-lg p-3">
-        <code className="text-gray-100">...</code>
-        <code className="text-cyan-300">Found 4 dependencies with lightning details.</code>
-        <div>
-          <code className="text-purple-300">How much do you want to send in total? Amount (in sats): </code>
-          <code className="text-gray-100">400</code>
+    <div style={{background: "linear-gradient(100deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="from-[#ffe000bb] from-10% via-[#ff8f00aa] via-60% to-[#fff19bbb] to-90%">
+      <div id="supporter" className="py-12 px-20">
+        <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+        <h1 className="text-5xl text-center font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Supporter</h1>
+        <p className="mt-6 mb-4 text-lg font-mono">Run the npx fund-ln-cli command in your project directory.<br/>First, it fetches the funding information from the package details by analyzing the dependencies.</p>
+        <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">
+          <p>$ npx fund-ln-cli</p>
+          <p className="text-yellow-200">
+            Send sats to your project's dependencies!
+          </p>
+          <p>
+            Analyzing your package.json...<br/>
+            Analyzing package: alby-tools<br/>
+            Analyzing package: alby-js-sdk<br/>
+            ...
+          </p>
+          <p className="text-cyan-200">
+            Found 4 dependencies with lightning details.
+          </p>
         </div>
-        <div>
-          <code className="text-green-400 mr-2">Please approve the NWC connection:</code>
-          <code className="text-blue-400 underline">https://nwc.getalby.com/...</code>
+        <p className="mt-6 mb-4 text-lg font-mono">Now you can enter your desired total amount you want to split among all supported dependencies.</p>
+        <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">
+          ...
+          <p className="text-cyan-200">Found 4 dependencies with lightning details.</p>
+          <p className="text-purple-300">How much do you want to send in total? Amount (in sats): 400</p>
+          <p className="text-green-400">Please approve the NWC connection: <span className="text-blue-400 underline">https://nwc.getalby.com/...</span></p>
+          And press enter/return to continue...
         </div>
-        <code className="text-gray-100">And press enter/return to continue...</code>
-      </div>
-      <p className="text-lg font-bold mt-8">Approve the wallet connection by clicking on the link and you're done! 🚀</p>
-      <p className="text-lg mb-4">Let the sats flow and support your favorit open source projects!</p>
-      <div className="flex flex-col bg-neutral-800 text-sm rounded-lg p-3">
-        <code className="text-gray-100">...</code>
-        <code className="text-gray-100">And press enter/return to continue...</code>
-        <code className="text-gray-100">Authentication Successful. Saving the NostrWalletConnect URL...</code>
-        <code className="text-green-400 mr-2">Saved in /Users/satoshi/.fund-ln</code>
-        <code className="text-gray-100">Supporting 4 packages with 100 sats each...</code>
-        <div>
-          <code className="text-yellow-400 mr-2">alby-tools:</code>
-          <code className="text-green-400 ">Payment Successful!</code>
-        </div>
-        <div>
-          <code className="text-yellow-400 mr-2">ln-package:</code>
-          <code className="text-green-400">Payment Successful!</code>
-        </div>
-        <div>
-          <code className="text-yellow-400 mr-2">awesome-nostr:</code>
-          <code className="text-green-400">Payment Successful!</code>
-        </div>
-        <div>
-          <code className="text-yellow-400 mr-2">nostr-ln:</code>
-          <code className="text-green-400">Payment Successful!</code>
+        <p className="mt-6 mb-4 text-lg font-mono">Approve the wallet connection by clicking on the link and you're done! 🚀<br/>Let the sats flow and support your favorite open source projects!</p>
+        <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 text-lg font-mono">
+          ...<br/>
+          And press enter/return to continue...<br/>
+          Authentication Successful. Saving the NostrWalletConnect URL...
+          <p className="text-green-400">Saved in /Users/satoshi/.fund-ln</p>
+          Supporting 4 packages with 100 sats each...
+          <p className="text-yellow-200">
+            alby-tools: <span className="text-green-400">Payment Successful!</span><br/>
+            ln-package: <span className="text-green-400">Payment Successful!</span><br/>
+            awesome-nostr: <span className="text-green-400">Payment Successful!</span><br/>
+            nostr-ln: <span className="text-green-400">Payment Successful!</span>
+          </p>
         </div>
       </div>
     </div>
-    <div className="bg-neutral-800">
-      <a href="https://www.getalby.com">
-        <img className="w-24 py-2 m-auto" src={AlbyLogo} alt="Alby logo" />
-      </a>
+
+    <div className="flex flex-col px-20 py-12 bg-[length:120px] bg-[url('../assets/noise.png')]">
+      <p className="text-sm font-mono">Boost a package directly from here<br/> using the npm-fund-lib methods</p>
+      <h1 id="search" className="text-5xl font-bold my-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Check Packages</h1>
+      <form onSubmit={handleSubmit} className="w-96">
+        <label htmlFor="package-search" className="mb-2 text-sm font-mono font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div className="flex items-center">
+          <input id="package-search" type="text" value={query} onChange={(e) => setQuery(e.target.value)} className="font-mono block w-full p-2 px-6 text-gray-600 border-4 border-gray-300 text-lg drop-shadow-md rounded-xl bg-gray-50 outline-none" placeholder="package name" required />
+          <button type="submit" className="font-mono ml-3 p-2 px-4 bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 border-gray-300 text-lg drop-shadow-md rounded-xl outline-none">Go</button>
+        </div>
+      </form>
+    </div>
+
+    <div className="flex justify-between items-center bg-neutral-800 p-6">
+      <div className="flex ">
+        <img className="h-20 mr-6" src={FundLNLogo} alt="Alby logo" />
+        <img className="h-20" src={FundLNLogoDarkText} alt="Alby logo" />
+      </div>
     </div>
   </div>
 )}
