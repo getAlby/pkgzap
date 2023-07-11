@@ -1,10 +1,8 @@
-import axios from 'axios';
-import { BoostButton } from 'boost-button';
 import React from 'react';
 import { useEffect, useState } from 'react';
 
 import Alby from '../assets/alby.png';
-import FundLNLogo from '../assets/fund-ln.png';
+import FundLNLogo from '../assets/fund-ln.svg';
 import LightningDesignOrange from '../assets/ln-design-orange.png';
 import LightningDesignYellow from '../assets/ln-design-yellow.png';
 import FundLNLogoText from '../assets/fund-ln-text.png';
@@ -52,7 +50,7 @@ function App() {
     <div>
       <div style={{background: "linear-gradient(80deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="relative from-[#ffe0008a] from-5% via-yellow-200 via-30% to-[#ffffff99]">
         <div className="flex flex-col items-center justify-center pt-12">
-          <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+          <img className="drop-shadow-md w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
           <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>How to use?</h1>
           <div className='drop-shadow-md bg-gray-300 rounded-xl'>
             <div className="shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-amber-200 rounded-xl px-12 py-3 m-1 text-2xl font-mono">
@@ -63,10 +61,10 @@ function App() {
         </div>
         <img className="absolute h-1/5" src={LightningDesignOrange} alt="Logo" />
         <div id="developer" className="relative z-50 flex flex-col items-center justify-center py-12">
-          <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+          <img className="drop-shadow-md w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
           <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Developer</h1>
           <p className="text-center font-mono">As a package developer you only have to add the<br/>lightning address to your package.json file.</p>
-          <p className="mt-6 font-mono mb-8">Have a look at <a href="https://github.com/getAlby/alby-tools/blob/c1ad140d6c73acf356d4722bf6c3cfd91e0e6ed5/package.json#L11-L14" className="underline">this example</a></p>
+          <p className="mt-6 font-mono mb-8">Have a look at <a href="https://github.com/getAlby/alby-tools/blob/a8a66d2903925c6f584600badf8b75b87260baa4/package.json#L13-L16" className="underline">this example</a></p>
           <div>
             <p className="mb-2 font-mono text-left">~/package.json</p>
             <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">
@@ -80,7 +78,7 @@ function App() {
           </div>
           <div className="flex flex-col items-center">
             <div id="library" className="py-12 px-20">
-              <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+              <img className="drop-shadow-md w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
               <h1 className="text-4xl text-center font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Library methods</h1>
               <p className="text-center font-mono">You can also fetch funding details of all the dependencies used in your project and send satoshis.<br/> For this, you can use the npm-fund-lib package.</p>
               <div className="flex justify-center">
@@ -110,7 +108,7 @@ function App() {
       </div>
       <img className="absolute h-2/5 right-1/4" src={LightningDesignYellow} alt="Logo" />
       <div className="flex flex-col items-center justify-center pb-12 bg-[length:120px] bg-[url('../assets/noise.png')]">
-        <img className="relative z-50 w-20 my-10 mx-auto" src={FundLNLogo} alt="Logo" />
+        <img className="drop-shadow-md relative z-50 w-20 my-10 mx-auto" src={FundLNLogo} alt="Logo" />
         <div className="relative z-50 flex items-center text-3xl font-bold text-neutral-700" style={{fontFamily: 'Catamaran'}}>
           <div>
             <p className="mb-2">If you don't have a</p>
@@ -124,7 +122,7 @@ function App() {
     </div>
     <div style={{background: "linear-gradient(100deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="from-[#ffe000bb] from-10% via-[#ff8f00aa] via-60% to-[#fff19bbb] to-90%">
       <div id="supporter" className="py-12 px-20">
-        <img className="w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
+        <img className="drop-shadow-md w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
         <h1 className="text-5xl text-center font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Supporter</h1>
         <p className="mt-6 mb-4 text-lg font-mono">Run the npx fund-ln-cli command in your project directory.<br/>First, it fetches the funding information from the package details by analyzing the dependencies.</p>
         <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">

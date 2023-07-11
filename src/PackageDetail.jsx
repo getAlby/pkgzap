@@ -4,7 +4,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 
 import Alby from '../assets/alby-logo-dark.svg';
-import FundLNLogo from '../assets/fund-ln.png';
+import FundLNLogo from '../assets/fund-ln.svg';
 import FundLNLogoDarkText from '../assets/fund-ln-text-dark.png';
 
 function PackageDetail({packageName}) {
