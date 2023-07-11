@@ -8,7 +8,8 @@ import FundLNLogo from '../assets/fund-ln.svg';
 import FundLNLogoDarkText from '../assets/fund-ln-text-dark.png';
 
 function PackageDetail({packageName}) {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [hint, setHint] = useState(false);
   const [desc, setDesc] = useState("");
   const [warn, setWarn] = useState("");
   const [lnAddress, setLnAddress] = useState("");
@@ -40,6 +41,7 @@ function PackageDetail({packageName}) {
   
         if (!fundingInfo || (fundingInfo && fundingInfo.type !== "lightning")) {
           setWarn("LN Funding details are not available for this package.");
+          setHint(true);
           return;
         }
         const lnAddress = fundingInfo.url;
@@ -71,6 +73,7 @@ function PackageDetail({packageName}) {
             <>
               {desc && <p className="mt-6 mb-4 text-lg font-mono max-w-xl">{desc}</p>}
               {warn && <p className="mt-6 mb-4 font-mono text-red-500">⚠️ {warn}</p>}
+              {hint && <p className="mt-2 mb-4 font-mono text-neutral-600">Let developers know how they can receive sats: <a className="underline" href="https://getalby.github.io/npm-fund-ln/#developer">https://getalby.github.io/npm-fund-ln/#developer</a></p>}
               {!warn && lnAddress && <div className="mt-12">
                 <BoostButton lnurl={lnAddress} expanded/>
               </div>}

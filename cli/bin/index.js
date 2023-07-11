@@ -114,7 +114,7 @@ export async function cli() {
   process.stdout.clearLine(0);
   if (!deps) {
     console.log(chalk.yellow(`\rNo dependencies with lightning details found :(`))
-    console.log(chalk.cyan(`Let them developers know how they can receive sats: https://getalby.github.io/npm-fund-ln/#developer`))
+    console.log(chalk.cyan(`Let developers know how they can receive sats: https://getalby.github.io/npm-fund-ln/#developer`))
     process.exit();
   }
   console.log(chalk.cyan(`\rFound ${deps} dependencies with lightning details.`))
