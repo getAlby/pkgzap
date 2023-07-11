@@ -80,7 +80,7 @@ function App() {
             <div id="library" className="py-12 px-20">
               <img className="drop-shadow-md w-20 mb-12 mx-auto" src={FundLNLogo} alt="Logo" />
               <h1 className="text-4xl text-center font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Library methods</h1>
-              <p className="text-center font-mono">You can also fetch funding details of all the dependencies used in your project and send satoshis.<br/> For this, you can use the npm-fund-lib package.</p>
+              <p className="text-center font-mono">You can also fetch funding details of all the dependencies used in your project and send satoshis.<br/> For this, you can use the fund-ln-lib package.</p>
               <div className="flex justify-center">
                 <div className="inline-block my-6 drop-shadow-md bg-gray-300 rounded-xl">
                   <div className="shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-amber-200 rounded-xl px-12 py-3 m-1 text-2xl font-mono">
@@ -166,7 +166,7 @@ function App() {
     </div>
 
     <div className="flex flex-col px-20 py-12 bg-[length:120px] bg-[url('../assets/noise.png')]">
-      <p className="text-sm font-mono">Boost a package directly from here<br/> using the npm-fund-lib methods</p>
+      <p className="text-sm font-mono">Boost a package directly from here<br/> using the fund-ln-lib methods</p>
       <h1 id="search" className="text-5xl font-bold my-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Check Packages</h1>
       <form onSubmit={handleSubmit} className="w-96">
         <label htmlFor="package-search" className="mb-2 text-sm font-mono font-medium text-gray-900 sr-only dark:text-white">Search</label>
