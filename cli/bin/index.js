@@ -112,6 +112,11 @@ export async function cli() {
   const fundingInfo = await fetchFundingInfo(JSON.parse(packageJsonData), 1, process);
   const deps = Object.keys(fundingInfo).length;
   process.stdout.clearLine(0);
+  if (!deps) {
+    console.log(chalk.yellow(`\rNo dependencies with lightning details found :(`))
+    console.log(chalk.cyan(`Let them developers know how they can receive sats: https://getalby.github.io/npm-fund-ln/#developer`))
+    process.exit();
+  }
   console.log(chalk.cyan(`\rFound ${deps} dependencies with lightning details.`))
 
   const amount = await waitForInput(chalk.magenta(`How much do you want to send in total? Amount (in sats): `));
