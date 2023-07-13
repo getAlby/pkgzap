@@ -1,6 +1,6 @@
 {
   "name": "@getalby/pkgzap-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Boost your project dependencies via lightning ⚡️",
   "type": "module",
   "main": "bin/index.js",
@@ -18,7 +18,7 @@
   "dependencies": {
     "@getalby/pkgzap": "^1.0.0",
     "alby-js-sdk": "^1.6.0",
-    "alby-tools": "^2.2.1",
+    "alby-tools": "^3.1.3",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
     "websocket-polyfill": "^0.0.3"
