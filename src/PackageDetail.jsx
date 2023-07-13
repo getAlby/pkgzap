@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 
 import Alby from '../assets/alby-logo-dark.svg';
 import PkgZapLogo from '../assets/pkgzap.svg';
-import PkgZapLogoDarkText from '../assets/pkgzap-text-dark.png';
 
 function PackageDetail({packageName}) {
   const [loading, setLoading] = useState(false);

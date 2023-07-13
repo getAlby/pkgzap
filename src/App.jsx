@@ -44,6 +44,7 @@ function App() {
       </div>
       <img className="w-72 mt-14 mb-10 mx-auto" src={PkgZapLogo} alt="Logo" />
       <h1 className="text-6xl font-bold text-neutral-700 text-center" style={{fontFamily: 'Catamaran'}} alt="Logo">PkgZap</h1>
+      <p className="mt-6 text-xl text-center font-mono">Open source money for open source packages.<br/>Value4Value payments for npm (and other package managers)</p>
     </div>
     <div>
       <div style={{background: "linear-gradient(80deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="relative from-[#ffe0008a] from-5% via-yellow-200 via-30% to-[#ffffff99]">
