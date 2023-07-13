@@ -6,7 +6,7 @@ import fs from 'fs'
 import readline from 'readline'
 import 'websocket-polyfill';
 import * as crypto from 'node:crypto';
-import { fetchFundingInfo } from 'pkgzap';
+import { fetchFundingInfo } from '@getalby/pkgzap';
 import os from 'os';
 
 global.crypto = crypto;
