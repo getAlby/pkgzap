@@ -39,8 +39,8 @@ function App() {
     <div className="pt-12 pb-24 min-h-screen bg-[url('../assets/lightning.png')]">
       <div className="text-lg pl-12 font-mono flex flex-col items-start">
         <a href="https://github.com/getAlby/pkgzap">getAlby/pkgzap</a>
-        <a href="https://www.npmjs.com/package/pkgzap-cli">npm/pkgzap-cli</a>
-        <a href="https://www.npmjs.com/package/pkgzap">npm/pkgzap</a>
+        <a href="https://www.npmjs.com/package/@getalby/pkgzap-cli">npm/@getalby/pkgzap-cli</a>
+        <a href="https://www.npmjs.com/package/@getalby/pkgzap">npm/@getalby/pkgzap</a>
       </div>
       <img className="w-72 mt-14 mb-10 mx-auto" src={PkgZapLogo} alt="Logo" />
       <h1 className="text-6xl font-bold text-neutral-700 text-center" style={{fontFamily: 'Catamaran'}} alt="Logo">PkgZap</h1>
@@ -52,7 +52,7 @@ function App() {
           <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>How to use?</h1>
           <div className='drop-shadow-md bg-gray-300 rounded-xl'>
             <div className="shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-amber-200 rounded-xl px-12 py-3 m-1 text-2xl font-mono">
-              npx pkgzap-cli
+              npx @getalby/pkgzap-cli
             </div>
           </div>
           <p className="mt-6 font-mono">Type this in your root directory and boost all your dependencies</p>
@@ -82,21 +82,21 @@ function App() {
               <div className="flex justify-center">
                 <div className="inline-block my-6 drop-shadow-md bg-gray-300 rounded-xl">
                   <div className="shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-amber-200 rounded-xl px-12 py-3 m-1 text-2xl font-mono">
-                    npm i pkgzap
+                    npm i @getalby/pkgzap
                   </div>
                 </div>
               </div>
               <p className="mt-6 mb-2 text-xl font-mono">getFundingDetails</p>
               <p className="mt-2 mb-4 text-sm font-mono">This gives you the funding details of all the dependencies in the package.json of the folder in which this is run</p>
               <div className="w-full drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-4 mb-10 text-lg font-mono">
-                <p className="text-purple-400">{`import `}<span className="text-yellow-400">{`{ `}<span className="text-red-400">getFundingDetails</span>{` }`}</span> from <span className="text-lime-300">"pkgzap"</span></p>
+                <p className="text-purple-400">{`import `}<span className="text-yellow-400">{`{ `}<span className="text-red-400">getFundingDetails</span>{` }`}</span> from <span className="text-lime-300">"@getalby/pkgzap"</span></p>
                 <p className="text-purple-400">{`const `}<span className="text-yellow-400">fundingInfo<span className="text-blue-300"> = getFundingDetails</span>{`()`}</span></p>
                 <p className="text-white">{`console.`}<span className="text-blue-300">log</span><span className="text-yellow-400">{`(JSON.`}<span className="text-blue-300">stringify</span><span className="text-purple-400">{`(`}<span className="text-white">fundingInfo, <span className='text-yellow-400'>null, 2</span></span>{`)`}</span>{`)`}</span></p>
               </div>
               <p className="mt-6 mb-2 text-xl font-mono">fetchFundingInfo</p>
               <p className="mt-2 mb-4 text-sm font-mono">If you want to fetch the funding data from some arbitrary JSON retrieved from an API or some other file, you can use this function</p>
               <div className="w-full drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-4 mb-10 text-lg font-mono">
-                <p className="text-purple-400">{`import `}<span className="text-yellow-400">{`{ `}<span className="text-red-400">fetchFundingInfo</span>{` }`}</span> from <span className="text-lime-300">"pkgzap"</span></p>
+                <p className="text-purple-400">{`import `}<span className="text-yellow-400">{`{ `}<span className="text-red-400">fetchFundingInfo</span>{` }`}</span> from <span className="text-lime-300">"@getalby/pkgzap"</span></p>
                 <p className="text-purple-400">{`const `}<span className="text-yellow-400">fundingInfo<span className="text-blue-300"> = fetchFundingInfo</span>{`(`}<span className="text-white">packageJsonData</span>{`)`}</span></p>
                 <p className="text-white">{`console.`}<span className="text-blue-300">log</span><span className="text-yellow-400">{`(JSON.`}<span className="text-blue-300">stringify</span><span className="text-purple-400">{`(`}<span className="text-white">fundingInfo, <span className='text-yellow-400'>null, 2</span></span>{`)`}</span>{`)`}</span></p>
               </div>
@@ -122,9 +122,9 @@ function App() {
       <div id="supporter" className="py-12 px-20">
         <img className="drop-shadow-md w-20 mb-12 mx-auto" src={PkgZapLogo} alt="Logo" />
         <h1 className="text-5xl text-center font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Supporter</h1>
-        <p className="mt-6 mb-4 text-lg font-mono">Run the npx pkgzap-cli command in your project directory.<br/>First, it fetches the funding information from the package details by analyzing the dependencies.</p>
+        <p className="mt-6 mb-4 text-lg font-mono">Run the npx @getalby/pkgzap-cli command in your project directory.<br/>First, it fetches the funding information from the package details by analyzing the dependencies.</p>
         <div className="drop-shadow-md bg-[radial-gradient(_var(--tw-gradient-stops))] from-neutral-700 to-neutral-800 text-white border-4 rounded-xl p-6 mb-10 text-lg font-mono">
-          <p>$ npx pkgzap-cli</p>
+          <p>$ npx @getalby/pkgzap-cli</p>
           <p className="text-yellow-200">
             Send sats to your project's dependencies!
           </p>
