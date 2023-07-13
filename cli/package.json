@@ -1,6 +1,6 @@
 {
-  "name": "fund-ln-cli",
-  "version": "1.1.1",
+  "name": "@getalby/pkgzap-cli",
+  "version": "1.1.2",
   "description": "Boost your project dependencies via lightning ⚡️",
   "type": "module",
   "main": "bin/index.js",
@@ -10,22 +10,22 @@
     "alby"
   ],
   "bin": {
-    "fund-ln": "./bin/index.js"
+    "pkgzap": "./bin/index.js"
   },
   "scripts": {
-    "fund-ln": "node bin/index.js"
+    "pkgzap-cli": "node bin/index.js"
   },
   "dependencies": {
     "alby-js-sdk": "^1.6.0",
     "alby-tools": "^2.2.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
-    "fund-ln-lib": "^1.1.0",
+    "pkgzap": "^1.1.0",
     "websocket-polyfill": "^0.0.3"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getAlby/npm-fund-ln.git"
+    "url": "git+https://github.com/getAlby/pkgzap.git"
   },
   "funding": {
     "type": "lightning",
@@ -37,7 +37,7 @@
   "author": "Alby Contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/getAlby/npm-fund-ln/issues"
+    "url": "https://github.com/getAlby/pkgzap/issues"
   },
-  "homepage": "https://github.com/getAlby/npm-fund-ln#readme"
+  "homepage": "https://github.com/getAlby/pkgzap#readme"
 }

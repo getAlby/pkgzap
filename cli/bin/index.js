@@ -6,7 +6,7 @@ import fs from 'fs'
 import readline from 'readline'
 import 'websocket-polyfill';
 import * as crypto from 'node:crypto';
-import { fetchFundingInfo } from 'fund-ln-lib';
+import { fetchFundingInfo } from 'pkgzap';
 import os from 'os';
 
 global.crypto = crypto;
@@ -40,7 +40,7 @@ const rl = readline.createInterface({
 });
 
 const homedir = os.homedir();
-const nwcPath = `${homedir}/.fund-ln`;
+const nwcPath = `${homedir}/.pkgzap`;
 
 function waitForInput(question) {
   return new Promise(resolve => {
@@ -52,7 +52,7 @@ function waitForInput(question) {
 
 async function authenticate() {
   const nwc = webln.NostrWebLNProvider.withNewSecret();
-  const url = await nwc.getAuthorizationUrl({ name: 'npm-fund-ln' });
+  const url = await nwc.getAuthorizationUrl({ name: 'pkgzap' });
   console.log(chalk.green(`Please approve the NWC connection: ${chalk.blue.underline(url)}`))
   await waitForInput(`And press enter/return to continue...`);
 
@@ -114,7 +114,7 @@ export async function cli() {
   process.stdout.clearLine(0);
   if (!deps) {
     console.log(chalk.yellow(`\rNo dependencies with lightning details found :(`))
-    console.log(chalk.cyan(`Let developers know how they can receive sats: https://getalby.github.io/npm-fund-ln/#developer`))
+    console.log(chalk.cyan(`Let developers know how they can receive sats: https://getalby.github.io/pkgzap/#developer`))
     process.exit();
   }
   console.log(chalk.cyan(`\rFound ${deps} dependencies with lightning details.`))
