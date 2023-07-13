@@ -1,8 +1,8 @@
 {
-  "name": "npm-fund-ln",
+  "name": "pkgzap",
   "version": "1.0.0",
-  "description": "Landing page for npm-fund-ln package",
-  "homepage": "https://getalby.github.io/npm-fund-ln",
+  "description": "Landing page for pkgzap package",
+  "homepage": "https://getalby.github.io/pkgzap",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/getAlby/npm-fund-ln.git"
+    "url": "git+https://github.com/getAlby/pkgzap.git"
   },
   "keywords": [
     "bitcoin",
@@ -44,6 +44,6 @@
   "author": "Alby Contributors",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/getAlby/npm-fund-ln/issues"
+    "url": "https://github.com/getAlby/pkgzap/issues"
   }
 }

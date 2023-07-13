@@ -1,34 +1,30 @@
 <p align="center">
-  <img width="100%" src="docs/npm-fund-ln.png">
+  <img width="100%" src="docs/pkgzap.png">
 </p>
 
-# npm-fund-ln
+# pkgzap
 
 An easy way to get the funding details of all the dependencies used in your project and send satoshis. Uses the metadata provided by package registries to fetch information about each dependency's funding sources.
 
 ## 🚀 Quick Start
-### fund-ln-cli
+### pkgzap-cli
 
-Install the package by running
+Run it in your project's root directory with
 ```bash
-npm i fund-ln-cli
-```
-and run it in your project's folder with
-```bash
-npx fund-ln
+npx pkgzap-cli
 ```
 
 [See more here](/cli/README.md)
 
-### fund-ln-lib
+### pkgzap
 
 ```
-npm install fund-ln-lib
+npm install pkgzap
 ```
 ### `getFundingDetails`
 
 ```js
-import { getFundingDetails } from "fund-ln-lib";
+import { getFundingDetails } from "pkgzap";
 
 const fundingInfo = getFundingDetails();
 
@@ -38,7 +34,7 @@ console.log(JSON.stringify(fundingInfo, null, 2))
 ### `fetchFundingInfo`
  
 ```js
-import { fetchFundingInfo } from "fund-ln-lib";
+import { fetchFundingInfo } from "pkgzap";
 
 const fundingInfo = fetchFundingInfo(packageJsonData); // depth is defaulted to 1
 

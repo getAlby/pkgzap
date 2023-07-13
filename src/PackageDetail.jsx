@@ -4,8 +4,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 
 import Alby from '../assets/alby-logo-dark.svg';
-import FundLNLogo from '../assets/fund-ln.svg';
-import FundLNLogoDarkText from '../assets/fund-ln-text-dark.png';
+import PkgZapLogo from '../assets/pkgzap.svg';
+import PkgZapLogoDarkText from '../assets/pkgzap-text-dark.png';
 
 function PackageDetail({packageName}) {
   const [loading, setLoading] = useState(false);
@@ -57,15 +57,15 @@ function PackageDetail({packageName}) {
   }, []);
   return (
   <div className="flex flex-col min-h-screen">
-    <div className="flex justify-between items-center bg-neutral-800 p-6">
-      <div className="flex cursor-pointer" onClick={goHome}>
-        <img className="h-20 mr-6" src={FundLNLogo} alt="Alby logo" />
-        <img className="h-20" src={FundLNLogoDarkText} alt="Alby logo" />
+    <div className="flex justify-between items-center bg-neutral-800 py-3 px-6">
+      <div className="flex cursor-pointer items-center" onClick={goHome}>
+        <img className="h-16 mr-4" src={PkgZapLogo} alt="Alby logo" />
+        <h1 className="text-4xl font-bold text-white" style={{fontFamily: 'Catamaran'}} alt="Alby logo">PkgZap</h1>
       </div>
     </div>
     <div style={{background: "linear-gradient(100deg, var(--tw-gradient-stops)), url('../assets/noise.png')"}} className="from-[#fffbdfbb] from-5% via-[#ffe83daa] via-30% to-[#fff7c1d4] to-90%">
       <div className="py-12 px-20">
-        <p className="font-mono">npm-fund-ln?package={packageName}</p>
+        <p className="font-mono">pkgzap?package={packageName}</p>
         <h1 className="text-5xl font-bold my-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>{packageName}</h1>
         {
           loading ?
@@ -73,7 +73,7 @@ function PackageDetail({packageName}) {
             <>
               {desc && <p className="mt-6 mb-4 text-lg font-mono max-w-xl">{desc}</p>}
               {warn && <p className="mt-6 mb-4 font-mono text-red-500">⚠️ {warn}</p>}
-              {hint && <p className="mt-2 mb-4 font-mono text-neutral-600">Let developers know how they can receive sats: <a className="underline" href="https://getalby.github.io/npm-fund-ln/#developer">https://getalby.github.io/npm-fund-ln/#developer</a></p>}
+              {hint && <p className="mt-2 mb-4 font-mono text-neutral-600">Let developers know how they can receive sats: <a className="underline" href="https://getalby.github.io/pkgzap/#developer">https://getalby.github.io/pkgzap/#developer</a></p>}
               {!warn && lnAddress && <div className="mt-12">
                 <BoostButton lnurl={lnAddress} expanded/>
               </div>}

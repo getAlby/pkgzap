@@ -1,20 +1,16 @@
 <p align="center">
-  <img width="100%" src="docs/fund-ln-cli.png">
+  <img width="100%" src="docs/pkgzap-cli.png">
 </p>
 
-# fund-ln-cli
+# pkgzap-cli
 
 ⚡️ Boost your project dependencies via lightning!
 
 ## How to boost?
 
-Install the package by running
+Run it in your project's root directory with
 ```bash
-npm i fund-ln-cli
-```
-and run it in your project's folder with
-```bash
-npx fund-ln
+npx pkgzap-cli
 ```
 
 
@@ -32,7 +28,7 @@ How much do you want to send in total? Amount (in sats): 2100
 
 #### ✅ Approve the connection request to connect your wallet:
 ```
-Please approve the NWC connection: https://nwc.getalby.com/apps/new?c=npm-fund-ln&pubkey=g3tal6yf3a42c15883c68e623dfe653515506dd945e29386c46e3832d6212121
+Please approve the NWC connection: https://nwc.getalby.com/apps/new?c=pkgzap&pubkey=g3tal6yf3a42c15883c68e623dfe653515506dd945e29386c46e3832d6212121
 And press enter/return to continue...
 ```
 
@@ -40,15 +36,15 @@ And press enter/return to continue...
 ```
 Authentication Successful. Saving the NostrWalletConnect URL...
 Enter a password to encrypt the NWC URL: g3tal6y
-Saved in /Users/satoshi/.fund-ln
+Saved in /Users/satoshi/.pkgzap
 ```
 
 #### ⚡️ Sit back and watch NWC do the rest!
 ```
 Supporting 21 packages with 100 sats each...
 crazy-ln-tools: Payment Successful!
-fund-ln-cli: Payment Successful!
-fund-ln-lib: Payment Successful!
+pkgzap-cli: Payment Successful!
+pkgzap: Payment Successful!
 ln-zapper: Payment Successful!
 ...
 ```
@@ -61,19 +57,19 @@ In your `package.json` file, add the following:
   "url": "lightning:satoshi@getalby.com"
 }
 ```
-This would help `fund-ln-cli` to pick your lightning address when your dependency users boost you!
+This would help `pkgzap-cli` to pick your lightning address when your dependency users boost you!
 
 
 ## 🧐 Troubleshooting
 
 If you run into the following error:
 ```
-file:///Users/satoshi/your-project/node_modules/fund-ln-cli/bin/index.js:12
+file:///Users/satoshi/your-project/node_modules/pkgzap-cli/bin/index.js:12
 global.crypto = crypto;
               ^
 
 TypeError: Cannot set property crypto of #<Object> which has only a getter
-    at file:///Users/satoshi/Coding/your-project/node_modules/fund-ln-cli/bin/index.js:12:15
+    at file:///Users/satoshi/Coding/your-project/node_modules/pkgzap-cli/bin/index.js:12:15
     at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
     at async Promise.all (index 0)
     at async ESMLoader.import (node:internal/modules/esm/loader:518:24)
@@ -82,4 +78,4 @@ TypeError: Cannot set property crypto of #<Object> which has only a getter
 
 ```
 
-Make sure you're NOT using Node.js v19 as `fund-ln-cli` is not supported in node versions >19.
+Make sure you're NOT using Node.js v19 as `pkgzap-cli` is not supported in node versions >19.

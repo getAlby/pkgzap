@@ -1,20 +1,20 @@
 <p align="center">
-  <img width="100%" src="docs/fund-ln-lib.png">
+  <img width="100%" src="docs/pkgzap-lib.png">
 </p>
 
-# fund-ln-lib
+# pkgzap
 
 Fetch funding details of all the dependencies used in your project and send satoshis. Uses the metadata provided by package registries to fetch information about each dependency's funding sources.
 
 ## 🤙 Usage
 
 ```
-npm install fund-ln-lib
+npm install pkgzap
 ```
 ### `getFundingDetails`
 
 ```js
-import { getFundingDetails } from "fund-ln-lib";
+import { getFundingDetails } from "pkgzap";
 
 const fundingInfo = getFundingDetails();
 
@@ -37,7 +37,7 @@ console.log(JSON.stringify(fundingInfo, null, 2))
 If you want to fetch the funding data from some arbitrary JSON retrieved from an API or some other source instead of a file, you can use this function
 
 ```js
-import { fetchFundingInfo } from "npm-fund-ln";
+import { fetchFundingInfo } from "pkgzap";
 
 const fundingInfo = fetchFundingInfo(packageJsonData); // depth is defaulted to 1
 
@@ -47,7 +47,7 @@ console.log(JSON.stringify(fundingInfo, null, 2))
 You can also use this method to fetch the funding info from a file:
 
 ```js
-import { fetchFundingInfo } from "npm-fund-ln";
+import { fetchFundingInfo } from "pkgzap";
 
 const packageJsonData = await fs.promises.readFile('package.json', 'utf8');
 const fundingInfo = fetchFundingInfo(JSON.parse(packageJsonData), 2);
@@ -64,4 +64,4 @@ In your `package.json` file, add the following:
   "url": "lightning:satoshi@getalby.com"
 }
 ```
-This would help `fund-ln-lib` methods to pick your lightning address when your dependency users boost you!
+This would help `pkgzap` methods to pick your lightning address when your dependency users boost you!
