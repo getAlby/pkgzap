@@ -23,6 +23,9 @@
     "crypto": "^1.0.1",
     "websocket-polyfill": "^0.0.3"
   },
+  "overrides": {
+    "@scure/bip39": "^1.2.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/getAlby/pkgzap.git"
