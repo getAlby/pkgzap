@@ -114,7 +114,7 @@ function App() {
             <a href="https://lightningaddress.com/" className="inline-block mb-2 text-5xl text-amber-400">lightning address</a>
             <p>Click on the bee!</p>
           </div>
-          <a href="https://getalby.com/user/new" className="w-44 ml-36"><img src={Alby} alt="Logo" /></a>
+          <a href="https://getalby.com/auth/users/new" className="w-44 ml-36"><img src={Alby} alt="Logo" /></a>
         </div>
         <div className="grayscale opacity-20 bg-center bg-[length:16rem] mt-12 py-8 w-full bg-[url('../assets/alby-logo.png')]"></div>
       </div>
@@ -161,6 +161,10 @@ function App() {
             nostr-ln: <span className="text-green-400">Payment Successful!</span>
           </p>
         </div>
+      </div>
+
+      <div className="flex justify-center items-center py-12">
+        <iframe width="900" height="500" src="https://www.youtube.com/embed/o1ykchIzruI?si=xzMNb5dAKavJaCE2" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </div>
     </div>
 
