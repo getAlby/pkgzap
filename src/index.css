@@ -628,6 +628,10 @@ video {
   margin-top: 0.5rem;
 }
 
+.mt-4{
+  margin-top: 1rem;
+}
+
 .mt-6{
   margin-top: 1.5rem;
 }
@@ -658,10 +662,6 @@ video {
 
 .h-2\/5{
   height: 40%;
-}
-
-.h-20{
-  height: 5rem;
 }
 
 .min-h-screen{
