@@ -63,6 +63,7 @@ function App() {
           <img className="drop-shadow-md w-20 mb-12 mx-auto" src={PkgZapLogo} alt="Logo" />
           <h1 className="text-5xl font-bold mb-8 text-neutral-700" style={{fontFamily: 'Catamaran'}}>Developer</h1>
           <p className="text-center font-mono">As a package developer you only have to add the<br/>lightning address to your package.json file.</p>
+          <p className="mt-4 text-center font-mono">And publish your package as a new version! 🚀</p>
           <p className="mt-6 font-mono mb-8">Have a look at <a href="https://github.com/getAlby/alby-tools/blob/a8a66d2903925c6f584600badf8b75b87260baa4/package.json#L13-L16" className="underline">this example</a></p>
           <div>
             <p className="mb-2 font-mono text-left">~/package.json</p>
