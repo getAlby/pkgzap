@@ -1,25 +1,40 @@
 #!/usr/bin/env node
-import { nwc } from "@getalby/sdk";
 import { LightningAddress } from "@getalby/lightning-tools";
+import { fetchFundingInfo } from "@getalby/pkgzap";
+import { nwc } from "@getalby/sdk";
+import { input, password, select } from "@inquirer/prompts";
+import { bytesToHex, hexToBytes } from "@noble/hashes/utils";
 import chalk from "chalk";
 import fs from "fs/promises";
-import "websocket-polyfill";
 import * as crypto from "node:crypto";
-// TODO: add types in pkgzap
-import { fetchFundingInfo } from "@getalby/pkgzap";
+import { generateSecretKey, getPublicKey } from "nostr-tools";
 import os from "os";
 import qrcode from "qrcode-terminal";
-import enquirer from 'enquirer';
-import { generateSecretKey, getPublicKey } from 'nostr-tools';
-import { hexToBytes, bytesToHex } from "@noble/hashes/utils";
-const { Select, Input, Password } = enquirer;
+import "websocket-polyfill";
 
 if (typeof global.crypto === "undefined") {
   global.crypto = crypto;
 }
 
+process.on("SIGINT", () => {
+  console.info("👋 until next time!");
+  process.exit();
+});
+
+process.on("uncaughtException", (error) => {
+  if (error instanceof Error && error.name === "ExitPromptError") {
+    console.info("👋 until next time!");
+    process.exit();
+  } else {
+    // Rethrow unknown errors
+    throw error;
+  }
+});
+
 export async function cli() {
-  console.log(chalk.yellow("Pkgzap / Send sats to your project's dependencies!"));
+  console.info(
+    chalk.yellow("Pkgzap / Send sats to your project's dependencies!")
+  );
 
   const nwcClient = await getNWCClient();
 
@@ -37,31 +52,39 @@ export async function cli() {
   const deps = Object.keys(fundingInfo).length;
 
   if (!deps) {
-    console.log(chalk.yellow("No dependencies with lightning details found."));
-    console.log(chalk.cyan("Learn how to add funding info: https://getalby.github.io/pkgzap/#developer"));
+    console.info(chalk.yellow("No dependencies with lightning details found."));
+    console.info(
+      chalk.cyan(
+        "Learn how to add funding info: https://getalby.github.io/pkgzap/#developer"
+      )
+    );
     process.exit();
   }
 
-  console.log(chalk.cyan(
-    `\nFound ${deps} ${
-      deps === 1 ? "dependency" : "dependencies"
-    } with lightning details.`
-  ));
+  console.info(
+    chalk.cyan(
+      `\nFound ${deps} ${
+        deps === 1 ? "dependency" : "dependencies"
+      } with lightning details.`
+    )
+  );
 
-  let amount;
-  try {
-    amount = await new Input({
-    name: "sats",
+  const amount = await input({
     message: "Total amount to send (in sats): ",
-    validate: (value) => (!isNaN(value) ? true : "Please enter a number"),
-  }).run();
-  } catch {
-    console.error("Aborting...");
-    process.exit(1);
-  }
+    validate: (value) => {
+      if (!value) {
+        return "Please enter a valid amount";
+      }
+      const n = Number(value);
+      if (isNaN(n) || n <= 0) {
+        return "Please enter a valid amount";
+      }
+      return true;
+    },
+  });
 
   const satsPerDep = Math.floor(amount / deps);
-  console.log(
+  console.info(
     `Supporting ${deps} ${
       deps === 1 ? "package" : "packages"
     } with ${satsPerDep} ${
@@ -70,12 +93,7 @@ export async function cli() {
   );
 
   for (const [pkgName, lnAddress] of Object.entries(fundingInfo)) {
-    await zapPackage(
-      nwcClient,
-      pkgName,
-      lnAddress,
-      Math.floor(amount / deps),
-    );
+    await zapPackage(nwcClient, pkgName, lnAddress, Math.floor(amount / deps));
   }
 
   process.exit();
@@ -89,7 +107,9 @@ async function zapPackage(nwcClient, packageName, lnAddress, amount) {
     await ln.fetch();
     const invoice = await ln.requestInvoice({ satoshi: amount });
     await nwcClient.payInvoice({ invoice: invoice.paymentRequest });
-    console.log(chalk.yellow(`${packageName}: `) + chalk.green(`Payment Successful!`),);
+    console.info(
+      chalk.yellow(`${packageName}: `) + chalk.green(`Payment Successful!`)
+    );
   } catch (err) {
     console.error(chalk.red(`Failed to zap ${packageName}:`), err.message);
   }
@@ -105,108 +125,84 @@ async function getNWCClient() {
   try {
     enc = await fs.readFile(nwcPath, "utf8");
   } catch (err) {
-    if (err.code !== 'ENOENT') {
-      console.error(chalk.red('Could not read stored NWC url.'), err.message);
+    if (err.code !== "ENOENT") {
+      console.error(chalk.red("Could not read stored NWC url."), err.message);
     }
   }
 
-  try {
-    if (enc) {
-      while (true) {
-        const action = await new Select({
-          name: "action",
-          message: "Stored NWC url found. What would you like to do?",
-          choices: [
-            "Enter password",
-            "Forgot password",
-          ],
-        }).run();
-        if (action === "Forgot password") {
-          await fs.unlink(nwcPath).catch(() => {});
-          console.log(chalk.yellow("Stored url removed, please reconnect."));
-          break;
-        }
-        const password = await new Password({
-          name: "decryptPassword",
-          message: "Enter password to decrypt stored NWC url:",
-        }).run();
-        const url = decryptData(enc, password);
-        if (!url) {
-          console.log(chalk.red("Incorrect password. Try again or reset."));
-          continue;
-        }
-        console.log(chalk.green("Decrypted succesfully!"));
-        const client = new nwc.NWCClient({ nostrWalletConnectUrl: url });
-        try {
-          await client.getInfo();
-        } catch (error) {
-          console.log(chalk.red("Invalid NWC url, please reconnect."));
-          break;
-        } 
-        return client;
+  if (enc) {
+    while (true) {
+      const action = await select({
+        message: "Stored NWC url found. What would you like to do?",
+        choices: ["Enter password", "Forgot password"],
+      });
+      if (action === "Forgot password") {
+        await fs.unlink(nwcPath).catch(() => {});
+        console.info(chalk.yellow("Stored url removed, please reconnect."));
+        break;
       }
+      const pwd = await password({
+        message: "Enter password to decrypt stored NWC url:",
+      });
+      const url = decryptData(enc, pwd);
+      if (!url) {
+        console.info(chalk.red("Incorrect password. Try again or reset."));
+        continue;
+      }
+      console.info(chalk.green("Decrypted succesfully!"));
+      const client = new nwc.NWCClient({ nostrWalletConnectUrl: url });
+      try {
+        await client.getInfo();
+      } catch (error) {
+        console.info(chalk.red("Invalid NWC url, please reconnect."));
+        break;
+      }
+      return client;
     }
-  } catch (err) {
-    console.error("Aborting...");
-    process.exit(1);
   }
 
   // connection logic
-  let method;
   let url;
-  try {
-    method = await new Select({
-      name: "method",
-      message: "How would you like to connect to pkgzap?",
-      choices: [
-        "Alby Hub",
-        "CoinOS",
-        "Nostr Wallet Connect",
-        "LN Link",
-      ],
-    }).run();
-    switch (method) {
-      case "Alby Hub": {
-        const hubOption = await new Select({
-          name: "hubOption",
-          message: "Select Alby Hub option:",
-          choices: ["Alby Cloud", "Alby Go", "Connection Secret"],
-        }).run();
-        if (hubOption === "Alby Cloud") {
-          url = await getCloudNwcUrl(true);
-        } else if (hubOption === "Alby Go") {
-          url = await getAlbyGoNwcUrl();
-        } else {
-          url = await new Password({
-            name: "secret",
-            message: "Enter Connection Secret:",
-          }).run();
-        }
-        break;
+  const method = await select({
+    message: "How would you like to connect to pkgzap?",
+    choices: ["Alby Hub", "CoinOS", "Nostr Wallet Connect", "LN Link"],
+  });
+  switch (method) {
+    case "Alby Hub": {
+      const hubOption = await select({
+        message: "Select Alby Hub option:",
+        choices: ["Alby Cloud", "Alby Go", "Connection Secret"],
+      });
+      if (hubOption === "Alby Cloud") {
+        url = await getCloudNwcUrl(true);
+      } else if (hubOption === "Alby Go") {
+        url = await getAlbyGoNwcUrl();
+      } else {
+        url = await password({
+          message: "Enter Connection Secret:",
+        });
       }
-      case "CoinOS": {
-        url = await getCloudNwcUrl();
-        break;
-      }
-      case "Nostr Wallet Connect": {
-        url = await new Password({
-          name: "nwcUrl",
-          message: "Enter your Connection Secret: ",
-        }).run();
-        break;
-      }
-      case "LN Link":{
-        console.log("Add a new Wallet Connection from LN Node => Generate NWC and copy the Connection Secret");
-        url = await new Password({
-          name: "lnLinkUrl",
-          message: "Paste the Connection Secret: ",
-        }).run();
-        break;
-      }
+      break;
     }
-  } catch (err) {
-    console.error("Aborting...");
-    process.exit(1);
+    case "CoinOS": {
+      url = await getCloudNwcUrl();
+      break;
+    }
+    case "Nostr Wallet Connect": {
+      url = await password({
+        message: "Enter your Connection Secret: ",
+      });
+      break;
+    }
+    case "LN Link": {
+      console.info(
+        "Add a new Wallet Connection from LN Node => Generate NWC and copy the Connection Secret"
+      );
+      url = await password({
+        message: "Paste the Connection Secret: ",
+      });
+      break;
+    }
   }
 
   let client;
@@ -218,20 +214,13 @@ async function getNWCClient() {
     return getNWCClient();
   }
 
-  let password;
-  try {
-    password = await new Password({
-      name: "encryptPassword",
-      message: "Set a password to encrypt your connection url:",
-    }).run();
-  } catch {
-    console.error("Aborting...");
-    process.exit(1);
-  }
+  const pwd = await password({
+    message: "Set a password to encrypt your connection url:",
+  });
 
   try {
-    await fs.writeFile(nwcPath, encryptData(url, password), "utf8");
-    console.log(chalk.green(`Saved encrypted url to ${nwcPath}`));
+    await fs.writeFile(nwcPath, encryptData(url, pwd), "utf8");
+    console.info(chalk.green(`Saved encrypted url to ${nwcPath}`));
   } catch (error) {
     console.error(chalk.red("Couldn't save NWC url."));
   }
@@ -243,7 +232,7 @@ function encryptData(data, password) {
   const salt = crypto.randomBytes(16);
   const key = crypto.pbkdf2Sync(password, salt, 10000, 32, "sha256");
   const iv = crypto.randomBytes(16);
-  let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
+  const cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
   let encrypted = cipher.update(data);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
   return salt.toString("hex") + iv.toString("hex") + encrypted.toString("hex");
@@ -254,48 +243,44 @@ function decryptData(cipher, password) {
     const salt = Buffer.from(cipher.slice(0, 32), "hex");
     const iv = Buffer.from(cipher.slice(32, 64), "hex");
     const key = crypto.pbkdf2Sync(password, salt, 10000, 32, "sha256");
-    let encryptedText = Buffer.from(cipher.slice(64), "hex");
-
-    let decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
+    const encryptedText = Buffer.from(cipher.slice(64), "hex");
+    const decipher = crypto.createDecipheriv("aes-256-cbc", Buffer.from(key), iv);
     let decrypted = decipher.update(encryptedText);
     decrypted = Buffer.concat([decrypted, decipher.final()]);
-
     return decrypted.toString();
   } catch (error) {
-    return false
+    return false;
   }
 }
 
 async function getCloudNwcUrl(isAlbyHub) {
-  const secret = bytesToHex(generateSecretKey())
-  const pubkey = getPublicKey(hexToBytes(secret))
+  const secret = bytesToHex(generateSecretKey());
+  const pubkey = getPublicKey(hexToBytes(secret));
   const authUrl = nwc.NWCClient.getAuthorizationUrl(
     isAlbyHub ? "https://my.albyhub.com/apps/new" : "https://coin.os/apps/new",
     {
       name: "pkgzap",
       requestMethods: ["pay_invoice"],
       maxAmount: 50_000_000,
-      budgetRenewal: 'monthly',
+      budgetRenewal: "monthly",
     },
     pubkey
   );
-  console.log(`Approve the connection: ${chalk.blue.underline(authUrl)}`)
+  console.info(`Approve the connection: ${chalk.blue.underline(authUrl)}`);
 
   const nwaClient = new nwc.NWAClient({
-    appPubkey: pubkey,
     appSecretKey: secret,
-    relayUrl: isAlbyHub ? "wss://relay.getalby.com/v1" : "wss://relay.coinos.io",
+    relayUrl: isAlbyHub
+      ? "wss://relay.getalby.com/v1"
+      : "wss://relay.coinos.io",
     requestMethods: [],
-  })
-  const url = await new Promise((resolve, reject) => {
+  });
+  const url = await new Promise((resolve) => {
     nwaClient.subscribe({
       onSuccess: async (client) => {
+        console.info(chalk.green("Successfully connected!"));
         resolve(client.nostrWalletConnectUrl);
-      },
-      onError: (err) => {
-        console.error(chalk.red("NWA subscription error:"), err.message);
-        reject(err);
-      },
+      }
     });
   });
 
@@ -308,25 +293,21 @@ async function getAlbyGoNwcUrl() {
     name: "pkgzap",
     requestMethods: ["pay_invoice"],
     maxAmount: 50_000_000,
-    budgetRenewal: 'monthly',
-    // TODO: change link
-    icon: "https://raw.githubusercontent.com/getAlby/pkgzap/refs/heads/main/assets/pkgzap.png"
+    budgetRenewal: "monthly",
+    icon: "https://raw.githubusercontent.com/getAlby/pkgzap/refs/heads/main/assets/pkgzap.png",
   });
 
-  console.log("Scan or enter the following NWA connection URI in your wallet:");
+  console.info("Scan or enter the following NWA connection URI in your wallet:");
   qrcode.generate(nwaClient.connectionUri, { small: true });
-  console.log(`NWA URI: ${nwaClient.connectionUri}\n`);
-  console.log("Waiting for connection...\n");
+  console.info(`NWA URI: ${nwaClient.connectionUri}\n`);
+  console.info("Waiting for connection...\n");
 
-  const url = await new Promise((resolve, reject) => {
+  const url = await new Promise((resolve) => {
     nwaClient.subscribe({
       onSuccess: async (client) => {
+        console.info(chalk.green("Successfully connected!"));
         resolve(client.nostrWalletConnectUrl);
-      },
-      onError: (err) => {
-        console.error(chalk.red("NWA subscription error:"), err.message);
-        reject(err);
-      },
+      }
     });
   });
 
