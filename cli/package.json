@@ -17,17 +17,13 @@
   },
   "dependencies": {
     "@getalby/lightning-tools": "^5.2.0",
-    "@getalby/pkgzap": "^1.1.0",
+    "@getalby/pkgzap": "^1.2.0",
     "@getalby/sdk": "^5.1.1",
-    "chalk": "^4.1.2",
-    "crypto": "^1.0.1",
-    "enquirer": "^2.4.1",
+    "@inquirer/prompts": "^7.6.0",
+    "chalk": "^5.4.1",
     "nostr-tools": "^2.15.0",
     "qrcode-terminal": "^0.12.0",
     "websocket-polyfill": "^0.0.3"
-  },
-  "overrides": {
-    "@scure/bip39": "^1.2.1"
   },
   "repository": {
     "type": "git",
