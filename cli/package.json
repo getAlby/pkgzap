@@ -16,11 +16,14 @@
     "pkgzap-cli": "node bin/index.js"
   },
   "dependencies": {
+    "@getalby/lightning-tools": "^5.2.0",
     "@getalby/pkgzap": "^1.1.0",
-    "alby-js-sdk": "^2.1.0",
-    "alby-tools": "^3.1.3",
+    "@getalby/sdk": "^5.1.1",
     "chalk": "^4.1.2",
     "crypto": "^1.0.1",
+    "enquirer": "^2.4.1",
+    "nostr-tools": "^2.15.0",
+    "qrcode-terminal": "^0.12.0",
     "websocket-polyfill": "^0.0.3"
   },
   "overrides": {
@@ -35,7 +38,7 @@
     "url": "lightning:hello@getalby.com"
   },
   "engines": {
-    "node": ">=14 <19"
+    "node": ">=14"
   },
   "author": "Alby Contributors",
   "license": "MIT",
