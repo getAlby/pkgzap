@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import 'simple-boost'
+import { useClient } from '../context'
 
-// Delay rendering until custom element is ready and you're in the browser
 const SimpleBoostWrapper = ({
   address,
-  amount = 10,
-  currency = 'usd',
+  amount = 1,
+  currency = 'sats',
   className = '',
 }: {
   address: string
@@ -13,20 +13,34 @@ const SimpleBoostWrapper = ({
   currency?: string
   className?: string
 }) => {
-
   const wrapperRef = useRef<HTMLDivElement>(null)
 
+  const { setInvoice } = useClient()
   useEffect(() => {
+    let boostEl: Element | null = null
+    const handleSuccess = (e: Event) => {
+      const customEvent = e as CustomEvent<{ pr: string }>
+      console.log('Thanks for the sats! Payment preimage:', customEvent)
+      setInvoice(customEvent.detail.pr)
+    }
+
     import('simple-boost').then(() => {
-      const boostEl = wrapperRef.current?.querySelector('simple-boost')
+      boostEl = wrapperRef.current?.querySelector('simple-boost')
       if (boostEl) {
-        boostEl.addEventListener('success', (e: Event) => {
-          console.log('Thanks for the sats! Payment preimage:', e)
-        })
+        boostEl.addEventListener('success', handleSuccess)
       }
     })
+
+    return () => {
+      if (boostEl) {
+        boostEl.removeEventListener('success', handleSuccess)
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  // TODO: remove  dangerouslySetInnerHTML Delay rendering until custom element is ready and you're in the browser
   return (
     <div
       ref={wrapperRef}
