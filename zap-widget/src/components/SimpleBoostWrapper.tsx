@@ -5,7 +5,7 @@ import { useClient } from '../context'
 const SimpleBoostWrapper = ({
   address,
   amount = 1,
-  currency = 'sats',
+  currency = 'usd',
   className = '',
 }: {
   address: string

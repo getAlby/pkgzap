@@ -90,7 +90,7 @@ function SearchBox() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen mx-4">
+    <div className="flex flex-col items-center justify-center min-h-screen mx-8">
       <div className="w-full flex items-center justify-center flex-col md:flex-row gap-3">
         <input
           value={packageQueryName}
