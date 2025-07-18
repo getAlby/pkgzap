@@ -5,7 +5,10 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        'grotesk': ['"Host Grotesk"', 'sans-serif'],
+        grotesk: ['"Host Grotesk"', 'sans-serif'],
+      },
+      borderColor: {
+        'white-25': '#FFFFFF40',
       },
     },
   },

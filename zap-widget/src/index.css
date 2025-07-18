@@ -1,1 +1,20 @@
 @import 'tailwindcss';
+
+body {
+  @apply bg-black text-white;
+
+}
+
+
+.bg-zap-gradient {
+  background: linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.01),
+      rgba(255, 255, 255, 0.01)
+    ),
+    radial-gradient(
+      84.92% 150% at 50% 138.75%,
+      rgba(255, 255, 255, 0.24) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+}

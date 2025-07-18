@@ -1,5 +1,7 @@
+import SearchBox from './components/SearchBox'
+
 function App() {
-  return <div className="font-grotesk text-2xl">@getalby/pkgzap</div>
+  return <SearchBox />
 }
 
 export default App
