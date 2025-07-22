@@ -41,6 +41,7 @@ const SimpleBoostWrapper = ({
   }, [])
 
   // TODO: remove  dangerouslySetInnerHTML Delay rendering until custom element is ready and you're in the browser
+  // Do this once (https://github.com/getAlby/simple-boost/issues/8) is fixed
   return (
     <div
       ref={wrapperRef}

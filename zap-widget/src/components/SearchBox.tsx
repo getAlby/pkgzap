@@ -41,21 +41,20 @@ function SearchBox() {
 
   const fetchPackage = async () => {
     try {
-      //clear the result and input alone - when the cncel icon is clicked
+      //clear the result and input alone - when the cancel icon is clicked
       if (result) {
         setResult(null)
         setPackageQueryName('')
-        setInvoice('')
-        setAmountInSats(0)
         return
       }
+      setInvoice('')
+      setAmountInSats(0)
 
       //fetch the package
       setIsLoading(true)
       if (packageQueryName.length > 1) {
         const response = await fetch(`https://registry.npmjs.org/${packageQueryName}/latest`)
         const packageInfo = await response.json()
-        console.log(packageInfo)
 
         if (!packageInfo || packageInfo === 'Not Found') {
           setResult({
@@ -82,8 +81,11 @@ function SearchBox() {
           })
         }
       }
-    } catch (err) {
-      console.error('Error fetching package:', err)
+    } catch {
+      setResult({
+        warn: true,
+        hint: 'Something went wrong, please try again :(',
+      })
     } finally {
       setIsLoading(false)
     }
@@ -94,7 +96,12 @@ function SearchBox() {
       <div className="w-full flex items-center justify-center flex-col md:flex-row gap-3">
         <input
           value={packageQueryName}
-          onChange={(e) => setPackageQueryName(e.target.value)}
+          onChange={(e) => {
+            if (result) {
+              setResult(null)
+            }
+            setPackageQueryName(e.target.value)
+          }}
           placeholder="Search package name..."
           className="w-full md:w-[576px] h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70"
         />
@@ -129,7 +136,7 @@ function SearchBox() {
               <div className="flex flex-col gap-3 text-[#F5F5F5] font-normal ">
                 <p>{result?.description}</p>
                 <p>
-                  Project’s lightning address:{' '}
+                  Project's lightning address:{' '}
                   <span className="font-medium">{result?.lnAddress}</span>
                 </p>
               </div>
@@ -146,7 +153,8 @@ function SearchBox() {
                   </p>
                   <div className="flex flex-col gap-1">
                     <p>🤩 Wow, thanks for tipping this project!</p>
-                    <p>Fancy to add another one on top? 😏</p>
+                    {/* TODO -  Enable boosting AGAIN once the limitation with simple-boost is fixed. addressed here - (https://github.com/getAlby/simple-boost/issues/8) */}
+                    {/* <p>Fancy to add another one on top? 😏</p> */}
                   </div>
                 </div>
               ) : (
@@ -154,12 +162,18 @@ function SearchBox() {
               )}
               {/* cards */}
 
+              {/* TODO -  Enable boosting AGAIN once the limitation with simple-boost is fixed. addressed here - (https://github.com/getAlby/simple-boost/issues/8) */}
               <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                {boosts.map(({ id, amount }) => (
-                  <div key={id}>
-                    <SimpleBoostWrapper address={result?.lnAddress} amount={amount} className="" />
-                  </div>
-                ))}
+                {amountInSats <= 0 &&
+                  boosts.map(({ id, amount }) => (
+                    <div key={id}>
+                      <SimpleBoostWrapper
+                        address="dunsin@getalby.com"
+                        /* address={result?.lnAddress}  */ amount={amount}
+                        className=""
+                      />
+                    </div>
+                  ))}
               </div>
             </div>
           )}
