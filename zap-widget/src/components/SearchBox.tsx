@@ -2,6 +2,7 @@ import decode from 'light-bolt11-decoder'
 import { useEffect, useState } from 'react'
 import { useClient } from '../context'
 import SimpleBoostWrapper from './SimpleBoostWrapper'
+import { cn } from '../lib/utils'
 
 const boosts = [
   { id: 'pkg1', amount: 1 },
@@ -60,7 +61,7 @@ function SearchBox() {
           setResult({
             warn: true,
             packageName: packageQueryName,
-            hint: '⚠️ Can’t find this package. Typo or doesn’t exist? 🤔',
+            hint: '⚠️ Can`t find this package. Typo or doesn`t exist? 🤔',
           })
           return
         } else if (!packageInfo.funding || packageInfo.funding.type !== 'lightning') {
@@ -93,7 +94,7 @@ function SearchBox() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen mx-8">
-      <div className="w-full flex items-center justify-center flex-col md:flex-row gap-3">
+      <div className="w-full flex items-center justify-center flex-col md:flex-row gap-2 md:gap-6">
         <input
           value={packageQueryName}
           onChange={(e) => {
@@ -103,14 +104,15 @@ function SearchBox() {
             setPackageQueryName(e.target.value)
           }}
           placeholder="Search package name..."
-          className="w-full md:w-[576px] h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70"
+          className="w-full max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70"
         />
         <button
           onClick={fetchPackage}
           disabled={isLoading}
-          className={`hover:invert w-full md:w-[120px] h-12 md:h-[72px] flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 ${
-            isLoading ? 'cursor-not-allowed' : 'bg-white text-black '
-          } shadow-md`}
+          className={cn(
+            'hover:invert w-full md:w-[120px] h-12 md:h-[72px] flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md',
+            isLoading ? 'cursor-not-allowed' : 'bg-white text-black',
+          )}
         >
           {isLoading && !result ? (
             <>
@@ -126,17 +128,17 @@ function SearchBox() {
       </div>
       {/* Result Card */}
       {result && (
-        <div className="bg-zap-gradient mt-4 p-6 rounded-4xl w-full md:w-[675px]">
+        <div className="bg-zap-gradient mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[675px]">
           <div className="flex flex-col gap-3">
             <h3 className="font-bold text-xl">{result?.packageName}</h3>
             {/* description */}
             {result?.warn ? (
-              <p className="text-[#FF6A6A] mt-4">{result?.hint}</p>
+              <p className="text-red-400 mt-4">{result?.hint}</p>
             ) : (
-              <div className="flex flex-col gap-3 text-[#F5F5F5] font-normal ">
+              <div className="flex flex-col gap-3 text-neutral-100 font-normal ">
                 <p>{result?.description}</p>
                 <p>
-                  Project's lightning address:{' '}
+                  Project`s lightning address:{` `}
                   <span className="font-medium">{result?.lnAddress}</span>
                 </p>
               </div>
@@ -148,7 +150,7 @@ function SearchBox() {
             <div className="flex flex-col  gap-5 mt-10">
               {amountInSats > 0 ? (
                 <div className="flex flex-col gap-5">
-                  <p className="text-[#16A24A]">
+                  <p className="text-green-500">
                     💸 {amountInSats} sats went straight to {result?.lnAddress}
                   </p>
                   <div className="flex flex-col gap-1">
@@ -168,9 +170,9 @@ function SearchBox() {
                   boosts.map(({ id, amount }) => (
                     <div key={id}>
                       <SimpleBoostWrapper
-                        address="dunsin@getalby.com"
-                        /* address={result?.lnAddress}  */ amount={amount}
-                        className=""
+                        address={result?.lnAddress}
+                        amount={amount}
+                        className="w-full border text-center text-black bg-white rounded-full p-2 font-bold cursor-pointer"
                       />
                     </div>
                   ))}

@@ -2,11 +2,10 @@
 
 body {
   @apply bg-black text-white;
- 
 }
 
 :root {
-  --font-sans: 'HostGrotesk', ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji";
+  --font-sans: 'HostGrotesk', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji';
 }
 
 .bg-zap-gradient {

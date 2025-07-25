@@ -12,10 +12,12 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
+    "clsx": "^2.1.1",
     "light-bolt11-decoder": "^3.2.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "simple-boost": "^2.0.2",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {

@@ -468,6 +468,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@getalby/zap-widget@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@getalby/zap-widget@workspace:."
+  dependencies:
+    "@tailwindcss/vite": "npm:^4.1.11"
+    "@types/react": "npm:^19.1.8"
+    "@types/react-dom": "npm:^19.1.6"
+    "@vitejs/plugin-react": "npm:^4.6.0"
+    clsx: "npm:^2.1.1"
+    light-bolt11-decoder: "npm:^3.2.0"
+    prettier: "npm:^3.6.2"
+    react: "npm:^19.1.0"
+    react-dom: "npm:^19.1.0"
+    simple-boost: "npm:^2.0.2"
+    tailwind-merge: "npm:^3.3.1"
+    tailwindcss: "npm:^4.1.11"
+    typescript: "npm:~5.8.3"
+    vite: "npm:^7.0.4"
+  languageName: unknown
+  linkType: soft
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -1204,6 +1225,13 @@ __metadata:
   version: 3.0.0
   resolution: "chownr@npm:3.0.0"
   checksum: 10c0/43925b87700f7e3893296c8e9c56cc58f926411cce3a6e5898136daaf08f08b9a8eb76d37d3267e707d0dcc17aed2e2ebdf5848c0c3ce95cf910a919935c1b10
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "clsx@npm:2.1.1"
+  checksum: 10c0/c4c8eb865f8c82baab07e71bfa8897c73454881c4f99d6bc81585aecd7c441746c1399d08363dc096c550cceaf97bd4ce1e8854e1771e9998d9f94c4fe075839
   languageName: node
   linkType: hard
 
@@ -2394,6 +2422,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwind-merge@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "tailwind-merge@npm:3.3.1"
+  checksum: 10c0/b84c6a78d4669fa12bf5ab8f0cdc4400a3ce0a7c006511af4af4be70bb664a27466dbe13ee9e3b31f50ddf6c51d380e8192ce0ec9effce23ca729d71a9f63818
+  languageName: node
+  linkType: hard
+
 "tailwindcss@npm:4.1.11, tailwindcss@npm:^4.1.11":
   version: 4.1.11
   resolution: "tailwindcss@npm:4.1.11"
@@ -2619,25 +2654,6 @@ __metadata:
   checksum: 10c0/a499c81ce6d4a1d260d4ea0f6d49ab4da09681e32c3f0472dee16667ed69d01dae63a3b81745a24bd78476ec4fcf856114cb4896ace738e01da34b2c42235416
   languageName: node
   linkType: hard
-
-"zap-widget@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "zap-widget@workspace:."
-  dependencies:
-    "@tailwindcss/vite": "npm:^4.1.11"
-    "@types/react": "npm:^19.1.8"
-    "@types/react-dom": "npm:^19.1.6"
-    "@vitejs/plugin-react": "npm:^4.6.0"
-    light-bolt11-decoder: "npm:^3.2.0"
-    prettier: "npm:^3.6.2"
-    react: "npm:^19.1.0"
-    react-dom: "npm:^19.1.0"
-    simple-boost: "npm:^2.0.2"
-    tailwindcss: "npm:^4.1.11"
-    typescript: "npm:~5.8.3"
-    vite: "npm:^7.0.4"
-  languageName: unknown
-  linkType: soft
 
 "zustand@npm:^4.5.7":
   version: 4.5.7
