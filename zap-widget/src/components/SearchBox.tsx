@@ -110,7 +110,7 @@ function SearchBox() {
           onClick={fetchPackage}
           disabled={isLoading}
           className={cn(
-            'hover:invert w-full md:w-[120px] h-12 md:h-[72px] flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md',
+            'hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md',
             isLoading ? 'cursor-not-allowed' : 'bg-white text-black',
           )}
         >
@@ -128,7 +128,7 @@ function SearchBox() {
       </div>
       {/* Result Card */}
       {result && (
-        <div className="bg-zap-gradient mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[675px]">
+        <div className="bg-zap-gradient mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
           <div className="flex flex-col gap-3">
             <h3 className="font-bold text-xl">{result?.packageName}</h3>
             {/* description */}
@@ -136,10 +136,10 @@ function SearchBox() {
               <p className="text-red-400 mt-4">{result?.hint}</p>
             ) : (
               <div className="flex flex-col gap-3 text-neutral-100 font-normal ">
-                <p>{result?.description}</p>
-                <p>
+                <p className="text-gray-200">{result?.description}</p>
+                <p className="text-gray-300">
                   Project`s lightning address:{` `}
-                  <span className="font-medium">{result?.lnAddress}</span>
+                  <span className="font-medium text-white">{result?.lnAddress}</span>
                 </p>
               </div>
             )}
