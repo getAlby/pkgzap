@@ -21,13 +21,13 @@
 Here’s what the widget looks like in action:
 
 ### 🔎 Search and Discover
-![Search Screenshot](./public/demo-pic-1.png)
+![Search Screenshot](../docs/pkgzap-widget-demo-1.png)
 
 ### ⚡ Lightning Payment Prompt
-![Zap Screenshot](./public/demo-pic-2.png)
+![Zap Screenshot](../docs/pkgzap-widget-demo-2.png)
 
 ### ✅ Payment Success
-![Success Screenshot](./public/demo-pic-3.png)
+![Success Screenshot](../docs/pkgzap-widget-demo-3.png)
 
 
 
