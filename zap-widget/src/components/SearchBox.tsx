@@ -104,7 +104,7 @@ function SearchBox() {
             setPackageQueryName(e.target.value)
           }}
           placeholder="Search package name..."
-          className="w-full max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70"
+          className="w-full md:max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70 outline-none"
         />
         <button
           onClick={fetchPackage}
@@ -128,7 +128,7 @@ function SearchBox() {
       </div>
       {/* Result Card */}
       {result && (
-        <div className="bg-zap-gradient mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
+        <div className="bg-zap-gradient border border-white/25 mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
           <div className="flex flex-col gap-3">
             <h3 className="font-bold text-xl">{result?.packageName}</h3>
             {/* description */}
@@ -147,9 +147,9 @@ function SearchBox() {
 
           {/* zap */}
           {result?.lnAddress && (
-            <div className="flex flex-col  gap-5 mt-10">
+            <div className="flex flex-col gap-6 mt-6">
               {amountInSats > 0 ? (
-                <div className="flex flex-col gap-5">
+                <div className="flex flex-col gap-6">
                   <p className="text-green-500">
                     💸 {amountInSats} sats went straight to {result?.lnAddress}
                   </p>
@@ -172,7 +172,7 @@ function SearchBox() {
                       <SimpleBoostWrapper
                         address={result?.lnAddress}
                         amount={amount}
-                        className="w-full border text-center text-black bg-white rounded-full p-2 font-bold cursor-pointer"
+                        className="w-full text-center text-black bg-white rounded-full p-2 font-bold cursor-pointer"
                       />
                     </div>
                   ))}
