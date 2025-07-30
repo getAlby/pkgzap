@@ -20,7 +20,6 @@ const SimpleBoostWrapper = ({
     let boostEl: Element | null = null
     const handleSuccess = (e: Event) => {
       const customEvent = e as CustomEvent<{ pr: string }>
-      console.log('Thanks for the sats! Payment preimage:', customEvent)
       setInvoice(customEvent.detail.pr)
     }
 

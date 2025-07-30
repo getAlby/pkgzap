@@ -1,96 +1,98 @@
-import decode from 'light-bolt11-decoder'
-import { useEffect, useState } from 'react'
-import { useClient } from '../context'
-import SimpleBoostWrapper from './SimpleBoostWrapper'
-import { cn } from '../lib/utils'
+import decode from "light-bolt11-decoder";
+import { useEffect, useState } from "react";
+import { useClient } from "../context";
+import { cn } from "../lib/utils";
+import SimpleBoostWrapper from "./SimpleBoostWrapper";
 
 const boosts = [
-  { id: 'pkg1', amount: 1 },
-  { id: 'pkg2', amount: 5 },
-  { id: 'pkg3', amount: 10 },
-  { id: 'pkg4', amount: 25 },
-  { id: 'pkg5', amount: 50 },
-  { id: 'pkg6', amount: 100 },
-]
+  { id: "pkg1", amount: 1 },
+  { id: "pkg2", amount: 5 },
+  { id: "pkg3", amount: 10 },
+  { id: "pkg4", amount: 25 },
+  { id: "pkg5", amount: 50 },
+  { id: "pkg6", amount: 100 },
+];
 
 type ResultType = {
-  packageName?: string
-  description?: string
-  warn?: boolean
-  hint?: string
-  lnAddress?: string
-}
+  packageName?: string;
+  description?: string;
+  warn?: boolean;
+  hint?: string;
+  lnAddress?: string;
+};
 
 function SearchBox() {
-  const [packageQueryName, setPackageQueryName] = useState('')
-  const [result, setResult] = useState<ResultType | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [amountInSats, setAmountInSats] = useState(0)
+  const [packageQueryName, setPackageQueryName] = useState("");
+  const [result, setResult] = useState<ResultType | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [amountInSats, setAmountInSats] = useState(0);
 
-  const { invoice, setInvoice } = useClient()
+  const { invoice, setInvoice } = useClient();
 
   useEffect(() => {
-    const decodeInv = () => {
+    const decodeInvoice = () => {
       if (invoice.length > 1) {
-        const amountInSat = decode.decode(invoice) as { sections: { value?: string | number }[] }
-        setAmountInSats(+amountInSat.sections[2]?.value / 1000)
+        const amountInSat = decode.decode(invoice) as { sections: { value?: string | number }[] };
+        setAmountInSats(+amountInSat.sections[2]?.value / 1000);
       }
-    }
+    };
 
-    decodeInv()
-  }, [invoice])
+    decodeInvoice();
+  }, [invoice]);
+
+  const clearResult = () => {
+    setResult(null);
+    setPackageQueryName("");
+    setAmountInSats(0);
+    setInvoice("");
+    return;
+  };
 
   const fetchPackage = async () => {
     try {
-      //clear the result and input alone - when the cancel icon is clicked
-      if (result) {
-        setResult(null)
-        setPackageQueryName('')
-        return
-      }
-      setInvoice('')
-      setAmountInSats(0)
+      setInvoice("");
+      setAmountInSats(0);
 
       //fetch the package
-      setIsLoading(true)
+      setIsLoading(true);
       if (packageQueryName.length > 1) {
-        const response = await fetch(`https://registry.npmjs.org/${packageQueryName}/latest`)
-        const packageInfo = await response.json()
+        const response = await fetch(`https://registry.npmjs.org/${packageQueryName}/latest`);
+        const packageInfo = await response.json();
 
-        if (!packageInfo || packageInfo === 'Not Found') {
+        if (!packageInfo || packageInfo === "Not Found") {
           setResult({
             warn: true,
             packageName: packageQueryName,
-            hint: '⚠️ Can`t find this package. Typo or doesn`t exist? 🤔',
-          })
-          return
-        } else if (!packageInfo.funding || packageInfo.funding.type !== 'lightning') {
+            hint: "⚠️ Can't find this package. Typo or doesn't exist? 🤔",
+          });
+          return;
+        } else if (!packageInfo.funding || packageInfo.funding.type !== "lightning") {
           setResult({
             warn: true,
             packageName: packageQueryName,
-            hint: '⚠️ This package does not accept bitcoin tips yet 🥺',
-          })
-          return
+            hint: "⚠️ This package does not accept bitcoin tips yet 🥺",
+          });
+          return;
         } else {
-          const lnAddress = packageInfo.funding.url
+          const lnAddress = packageInfo.funding.url;
 
           setResult({
             warn: false,
-            lnAddress: lnAddress.startsWith('lightning:') ? lnAddress.substring(10) : lnAddress,
+            lnAddress: lnAddress.startsWith("lightning:") ? lnAddress.substring(10) : lnAddress,
             packageName: packageInfo.name,
             description: packageInfo.description,
-          })
+          });
         }
       }
     } catch {
       setResult({
         warn: true,
-        hint: 'Something went wrong, please try again :(',
-      })
+        hint: "Something went wrong, please try again :(",
+      });
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen mx-8">
@@ -99,34 +101,41 @@ function SearchBox() {
           value={packageQueryName}
           onChange={(e) => {
             if (result) {
-              setResult(null)
+              setResult(null);
             }
-            setPackageQueryName(e.target.value)
+            setPackageQueryName(e.target.value);
           }}
           placeholder="Search package name..."
           className="w-full md:max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70 outline-none"
         />
-        <button
-          onClick={fetchPackage}
-          disabled={isLoading}
-          className={cn(
-            'hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md',
-            isLoading ? 'cursor-not-allowed' : 'bg-white text-black',
-          )}
-        >
-          {isLoading && !result ? (
-            <>
+        {result ? (
+          <button
+            onClick={clearResult}
+            className={cn(
+              "hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md",
+              isLoading ? "cursor-not-allowed" : "bg-white text-black",
+            )}
+          >
+            <img src="./cancel.svg" className="w-5 h-5" />
+          </button>
+        ) : (
+          <button
+            onClick={fetchPackage}
+            disabled={isLoading}
+            className={cn(
+              "hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md",
+              isLoading ? "cursor-not-allowed" : "bg-white text-black",
+            )}
+          >
+            {isLoading ? (
               <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 hover:border-white"></span>
-            </>
-          ) : (
-            <>
-              {!result && <span>GO</span>}
-              {result && <img src="./cancel.svg" className="w-5 h-5" />}
-            </>
-          )}
-        </button>
+            ) : (
+              "GO"
+            )}
+          </button>
+        )}
       </div>
-      {/* Result Card */}
+      
       {result && (
         <div className="bg-zap-gradient border border-white/25 mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
           <div className="flex flex-col gap-3">
@@ -138,14 +147,13 @@ function SearchBox() {
               <div className="flex flex-col gap-3 text-neutral-100 font-normal ">
                 <p className="text-gray-200">{result?.description}</p>
                 <p className="text-gray-300">
-                  Project`s lightning address:{` `}
+                  Project's lightning address:{" "}
                   <span className="font-medium text-white">{result?.lnAddress}</span>
                 </p>
               </div>
             )}
           </div>
 
-          {/* zap */}
           {result?.lnAddress && (
             <div className="flex flex-col gap-6 mt-6">
               {amountInSats > 0 ? (
@@ -162,7 +170,6 @@ function SearchBox() {
               ) : (
                 <p>🎉 Hurray! You can tip this package. Be generous 😏</p>
               )}
-              {/* cards */}
 
               {/* TODO -  Enable boosting AGAIN once the limitation with simple-boost is fixed. addressed here - (https://github.com/getAlby/simple-boost/issues/8) */}
               <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
@@ -182,7 +189,7 @@ function SearchBox() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default SearchBox
+export default SearchBox;
