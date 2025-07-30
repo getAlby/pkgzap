@@ -1,4 +1,4 @@
-import decode from "light-bolt11-decoder";
+import { decodeInvoice } from "@getalby/lightning-tools";
 import { useEffect, useState } from "react";
 import { useClient } from "../context";
 import { cn } from "../lib/utils";
@@ -30,27 +30,29 @@ function SearchBox() {
   const { invoice, setInvoice } = useClient();
 
   useEffect(() => {
-    const decodeInvoice = () => {
-      if (invoice.length > 1) {
-        const amountInSat = decode.decode(invoice) as { sections: { value?: string | number }[] };
-        setAmountInSats(+amountInSat.sections[2]?.value / 1000);
+    const decodeInvoiceFn = () => {
+      if (invoice.pr.length > 1) {
+        const { satoshi } = decodeInvoice(invoice.pr);
+        if (satoshi) {
+          setAmountInSats(satoshi);
+        }
       }
     };
 
-    decodeInvoice();
+    decodeInvoiceFn();
   }, [invoice]);
 
   const clearResult = () => {
     setResult(null);
     setPackageQueryName("");
     setAmountInSats(0);
-    setInvoice("");
+    setInvoice({ pr: "", preimage: "" });
     return;
   };
 
   const fetchPackage = async () => {
     try {
-      setInvoice("");
+      setInvoice({ pr: "", preimage: "" });
       setAmountInSats(0);
 
       //fetch the package
@@ -105,6 +107,11 @@ function SearchBox() {
             }
             setPackageQueryName(e.target.value);
           }}
+          onKeyDown={(e: React.KeyboardEvent) => {
+            if (e.key === "Enter") {
+              fetchPackage();
+            }
+          }}
           placeholder="Search package name..."
           className="w-full md:max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70 outline-none"
         />
@@ -135,7 +142,7 @@ function SearchBox() {
           </button>
         )}
       </div>
-      
+
       {result && (
         <div className="bg-zap-gradient border border-white/25 mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
           <div className="flex flex-col gap-3">
@@ -178,6 +185,7 @@ function SearchBox() {
                     <div key={id}>
                       <SimpleBoostWrapper
                         address={result?.lnAddress}
+                        address="dunsin@getalby.com"
                         amount={amount}
                         className="w-full text-center text-black bg-white rounded-full p-2 font-bold cursor-pointer"
                       />

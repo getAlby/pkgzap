@@ -19,8 +19,8 @@ const SimpleBoostWrapper = ({
   useEffect(() => {
     let boostEl: Element | null = null
     const handleSuccess = (e: Event) => {
-      const customEvent = e as CustomEvent<{ pr: string }>
-      setInvoice(customEvent.detail.pr)
+      const customEvent = e as CustomEvent<{ pr: string, preimage: string }>
+      setInvoice(customEvent.detail);
     }
 
     import('simple-boost').then(() => {
