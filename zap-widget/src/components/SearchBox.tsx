@@ -4,37 +4,35 @@ import { useClient } from "../context";
 import { cn } from "../lib/utils";
 import SimpleBoostWrapper from "./SimpleBoostWrapper";
 
-const boosts = [
-  { id: "pkg1", amount: 1 },
-  { id: "pkg2", amount: 5 },
-  { id: "pkg3", amount: 10 },
-  { id: "pkg4", amount: 25 },
-  { id: "pkg5", amount: 50 },
-  { id: "pkg6", amount: 100 },
+const BOOST_AMOUNTS = [1, 5, 10, 25, 50, 100];
+const ERROR_MESSAGES = [
+  "⚠️ Can't find this package. Typo or doesn't exist? 🤔",
+  "⚠️ This package does not accept bitcoin tips yet 🥺",
 ];
 
-type ResultType = {
+type PackageInfoType = {
   packageName?: string;
-  description?: string;
-  warn?: boolean;
-  hint?: string;
-  lnAddress?: string;
+  details?: {
+    description: string;
+    lnAddress: string;
+  };
 };
 
 function SearchBox() {
-  const [packageQueryName, setPackageQueryName] = useState("");
-  const [result, setResult] = useState<ResultType | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [amountInSats, setAmountInSats] = useState(0);
+  const [packageQueryName, setPackageQueryName] = useState<string>("");
+  const [packageInfo, setPackageInfo] = useState<PackageInfoType | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [amountSats, setAmountSats] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const { invoice, setInvoice } = useClient();
 
   useEffect(() => {
     const decodeInvoiceFn = () => {
-      if (invoice.pr.length > 1) {
-        const { satoshi } = decodeInvoice(invoice.pr);
+      if (invoice) {
+        const { satoshi } = decodeInvoice(invoice);
         if (satoshi) {
-          setAmountInSats(satoshi);
+          setAmountSats(satoshi);
         }
       }
     };
@@ -42,59 +40,61 @@ function SearchBox() {
     decodeInvoiceFn();
   }, [invoice]);
 
-  const clearResult = () => {
-    setResult(null);
+  const clearPackageInfo = () => {
+    setPackageInfo(null);
+    setError(null);
+    setAmountSats(null);
+    setInvoice("");
     setPackageQueryName("");
-    setAmountInSats(0);
-    setInvoice({ pr: "", preimage: "" });
     return;
   };
 
   const fetchPackage = async () => {
     try {
-      setInvoice({ pr: "", preimage: "" });
-      setAmountInSats(0);
+      setInvoice("");
+      setAmountSats(null);
 
       //fetch the package
       setIsLoading(true);
-      if (packageQueryName.length > 1) {
-        const response = await fetch(`https://registry.npmjs.org/${packageQueryName}/latest`);
-        const packageInfo = await response.json();
+      if (packageQueryName) {
+        const data = await fetch(`https://registry.npmjs.org/${packageQueryName}/latest`);
+        const packageData = await data.json();
 
-        if (!packageInfo || packageInfo === "Not Found") {
-          setResult({
-            warn: true,
-            packageName: packageQueryName,
-            hint: "⚠️ Can't find this package. Typo or doesn't exist? 🤔",
-          });
-          return;
-        } else if (!packageInfo.funding || packageInfo.funding.type !== "lightning") {
-          setResult({
-            warn: true,
-            packageName: packageQueryName,
-            hint: "⚠️ This package does not accept bitcoin tips yet 🥺",
-          });
-          return;
+        if (!packageData || packageData === "Not Found") {
+          throw new Error(ERROR_MESSAGES[0]);
+        } else if (!packageData.funding || packageData.funding.type !== "lightning") {
+          throw new Error(ERROR_MESSAGES[1]);
         } else {
-          const lnAddress = packageInfo.funding.url;
-
-          setResult({
-            warn: false,
-            lnAddress: lnAddress.startsWith("lightning:") ? lnAddress.substring(10) : lnAddress,
-            packageName: packageInfo.name,
-            description: packageInfo.description,
+          setError(null);
+          const lnAddress = packageData.funding.url;
+          setPackageInfo({
+            packageName: packageData.name,
+            details: {
+              lnAddress: lnAddress.startsWith("lightning:") ? lnAddress.substring(10) : lnAddress,
+              description: packageData.description,
+            },
           });
         }
       }
-    } catch {
-      setResult({
-        warn: true,
-        hint: "Something went wrong, please try again :(",
-      });
+    } catch (error) {
+      if (error instanceof Error && ERROR_MESSAGES.includes(error.message)) {
+        setError(error.message);
+        setPackageInfo({
+          packageName: packageQueryName,
+        });
+      } else {
+        setPackageInfo(null);
+        setError("An unexpected error occurred. Please try again later :(");
+      }
     } finally {
       setIsLoading(false);
     }
   };
+
+  const buttonClass = cn(
+    "hover:bg-black hover:text-white w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md border-1 border-white/25",
+    isLoading ? "cursor-not-allowed" : "bg-white text-black cursor-pointer",
+  );
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen mx-8">
@@ -102,9 +102,6 @@ function SearchBox() {
         <input
           value={packageQueryName}
           onChange={(e) => {
-            if (result) {
-              setResult(null);
-            }
             setPackageQueryName(e.target.value);
           }}
           onKeyDown={(e: React.KeyboardEvent) => {
@@ -115,27 +112,14 @@ function SearchBox() {
           placeholder="Search package name..."
           className="w-full md:max-w-xl h-12 md:h-[72px] rounded-full pl-5 py-2 bg-zap-gradient border border-white/25 text-2xl font-grotesk placeholder-opacity-70 outline-none"
         />
-        {result ? (
-          <button
-            onClick={clearResult}
-            className={cn(
-              "hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md",
-              isLoading ? "cursor-not-allowed" : "bg-white text-black",
-            )}
-          >
-            <img src="./cancel.svg" className="w-5 h-5" />
+        {packageInfo && packageInfo?.packageName === packageQueryName ? (
+          <button onClick={clearPackageInfo} className={`${buttonClass} group`}>
+            <img src="./cancel.svg" className="w-5 h-5 filter group-hover:invert" />
           </button>
         ) : (
-          <button
-            onClick={fetchPackage}
-            disabled={isLoading}
-            className={cn(
-              "hover:invert w-full md:w-[99px] h-12 md:h-[72px] p-6 flex items-center justify-center gap-2 rounded-full font-bold text-2xl md:text-3xl transition-all duration-200 shadow-md",
-              isLoading ? "cursor-not-allowed" : "bg-white text-black",
-            )}
-          >
+          <button onClick={fetchPackage} disabled={isLoading} className={buttonClass}>
             {isLoading ? (
-              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 hover:border-white"></span>
+              <span className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2"></span>
             ) : (
               "GO"
             )}
@@ -143,30 +127,31 @@ function SearchBox() {
         )}
       </div>
 
-      {result && (
+      {(packageInfo?.details || error) && (
         <div className="bg-zap-gradient border border-white/25 mt-4 md:mt-6 p-6 rounded-4xl w-full md:w-[699px]">
           <div className="flex flex-col gap-3">
-            <h3 className="font-bold text-xl">{result?.packageName}</h3>
-            {/* description */}
-            {result?.warn ? (
-              <p className="text-red-400 mt-4">{result?.hint}</p>
-            ) : (
+            {packageInfo?.packageName && (
+              <h3 className="font-bold text-xl">{packageInfo.packageName}</h3>
+            )}
+
+            {error && <p className="text-red-400 mt-4">{error}</p>}
+            {packageInfo?.details && !error && (
               <div className="flex flex-col gap-3 text-neutral-100 font-normal ">
-                <p className="text-gray-200">{result?.description}</p>
+                <p className="text-gray-200">{packageInfo.details.description}</p>
                 <p className="text-gray-300">
                   Project's lightning address:{" "}
-                  <span className="font-medium text-white">{result?.lnAddress}</span>
+                  <span className="font-medium text-white">{packageInfo.details.lnAddress}</span>
                 </p>
               </div>
             )}
           </div>
 
-          {result?.lnAddress && (
+          {packageInfo?.details && !error && (
             <div className="flex flex-col gap-6 mt-6">
-              {amountInSats > 0 ? (
+              {amountSats ? (
                 <div className="flex flex-col gap-6">
                   <p className="text-green-500">
-                    💸 {amountInSats} sats went straight to {result?.lnAddress}
+                    💸 {amountSats} sats went straight to {packageInfo.details.lnAddress}
                   </p>
                   <div className="flex flex-col gap-1">
                     <p>🤩 Wow, thanks for tipping this project!</p>
@@ -180,12 +165,11 @@ function SearchBox() {
 
               {/* TODO -  Enable boosting AGAIN once the limitation with simple-boost is fixed. addressed here - (https://github.com/getAlby/simple-boost/issues/8) */}
               <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                {amountInSats <= 0 &&
-                  boosts.map(({ id, amount }) => (
-                    <div key={id}>
+                {!amountSats &&
+                  BOOST_AMOUNTS.map((amount) => (
+                    <div key={`boost-${amount}`}>
                       <SimpleBoostWrapper
-                        address={result?.lnAddress}
-                        address="dunsin@getalby.com"
+                        address={packageInfo.details.lnAddress}
                         amount={amount}
                         className="w-full text-center text-black bg-white rounded-full p-2 font-bold cursor-pointer"
                       />

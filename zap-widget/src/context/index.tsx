@@ -1,11 +1,8 @@
 import React, { useContext, useState } from "react";
 
 type UserContextType = {
-  invoice: {
-    pr: string;
-    preimage: string;
-  };
-  setInvoice: React.Dispatch<React.SetStateAction<{ pr: string; preimage: string }>>;
+  invoice: string;
+  setInvoice: React.Dispatch<React.SetStateAction<string>>;
   paid: boolean;
   setPaid: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -14,7 +11,7 @@ type UserContextType = {
 export const UserContext = React.createContext<UserContextType | undefined>(undefined);
 
 export const UserContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [invoice, setInvoice] = useState({ pr: "", preimage: "" });
+  const [invoice, setInvoice] = useState("");
   const [paid, setPaid] = useState(false);
 
   return (
