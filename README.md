@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="100%" src="docs/pkgzap.png">
+  <img width="100%" src="docs/pkgzap-banner.png">
 </p>
 
 # pkgzap
