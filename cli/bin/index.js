@@ -294,7 +294,7 @@ async function getAlbyGoNwcUrl() {
     requestMethods: ["pay_invoice"],
     maxAmount: 50_000_000,
     budgetRenewal: "monthly",
-    icon: "https://raw.githubusercontent.com/getAlby/pkgzap/refs/heads/main/assets/pkgzap.png",
+    icon: "https://raw.githubusercontent.com/getAlby/pkgzap/refs/heads/main/docs/pkgzap.png",
   });
 
   console.info("Scan or enter the following NWA connection URI in your wallet:");
