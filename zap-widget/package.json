@@ -1,11 +1,14 @@
 {
   "name": "@getalby/zap-widget",
+  "homepage": "https://getalby.github.io/pkgzap",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d dist",
+    "build": "tsc -b && vite build && echo pkgzapwidget.albylabs.com > dist/CNAME",
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write ."
@@ -24,6 +27,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "gh-pages": "^6.3.0",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
     "vite": "^7.0.4"
