@@ -1,6 +1,6 @@
 {
   "name": "@getalby/pkgzap-cli",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Boost your project dependencies via lightning ⚡️",
   "type": "module",
   "main": "bin/index.js",

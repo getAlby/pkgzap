@@ -1,66 +1,49 @@
 <p align="center">
-  <img width="100%" src="docs/pkgzap-cli.png">
+  <img width="100%" src="../docs/pkgzap-banner.png">
 </p>
 
-# pkgzap-cli
+# ⚡️ PkgZap
 
-⚡️ Boost your project dependencies via lightning!
+Get bitcoin tips from projects using your packages and support devs of your project's dependencies.
 
-## How to boost?
+## 🫰 How It Works? (For Supporters)
 
-Run it in your project's root directory with
+### 1) Run this command in your project's root folder:
+
 ```bash
-npx pkgzap-cli
+npx @getalby/pkgzap-cli
 ```
 
+### 2) Connect a Wallet
 
-#### ⌛ It will start analyzing your dependencies using your package.json file:
-```
-Send sats to your project's dependencies!
-Analyzing your package.json...
-Found 21 dependencies with lightning details.
-```
+Securely connect any [NWC wallet](https://nwc.dev/) from the options.
 
-#### 🚀 Specify the amount you want to send to these dependencies:
-```
-How much do you want to send in total? Amount (in sats): 2100
-```
+### 3) Choose Amount and Pay
 
-#### ✅ Approve the connection request to connect your wallet:
-```
-Please approve the NWC connection: https://nwc.getalby.com/apps/new?c=pkgzap&pubkey=g3tal6yf3a42c15883c68e623dfe653515506dd945e29386c46e3832d6212121
-And press enter/return to continue...
-```
+Enter desired total amount you want to split among all supported dependencies and enjoy the sats flowing!
 
-#### 💾 The NWC URL would be encrypted and saved in your device for future use.
-```
-Authentication Successful. Saving the NostrWalletConnect URL...
-Enter a password to encrypt the NWC URL: g3tal6y
-Saved in /Users/satoshi/.pkgzap
-```
+## 🧑‍💻 How It Works? (For Developers)
 
-#### ⚡️ Sit back and watch NWC do the rest!
-```
-Supporting 21 packages with 100 sats each...
-crazy-ln-tools: Payment Successful!
-pkgzap-cli: Payment Successful!
-pkgzap: Payment Successful!
-ln-zapper: Payment Successful!
-...
-```
+### 1) Add wallet info to `package.json`
 
-## How to receive sats to your dependencies?
-In your `package.json` file, add the following:
-```
+As a package developer you only have to add your lightning address to your `package.json` file:
+
+```json
 "funding": {
   "type": "lightning",
-  "url": "lightning:satoshi@getalby.com"
+  "url": "lightning:yourname@getalby.com"
 }
 ```
-This would help `pkgzap-cli` to pick your lightning address when your dependency users boost you!
 
+### 2) Publish Package
 
-## 🧐 Troubleshooting
+Push your latest version to npm like you always do using `npm publish`.
+
+### 3) That’s it! You’re fundable.
+
+People can now tip your package!
+
+# 🧐 Troubleshooting
 
 If you run into the following error:
 ```
@@ -75,7 +58,6 @@ TypeError: Cannot set property crypto of #<Object> which has only a getter
     at async ESMLoader.import (node:internal/modules/esm/loader:518:24)
     at async loadESM (node:internal/process/esm_loader:102:5)
     at async handleMainPromise (node:internal/modules/run_main:66:12)
-
 ```
 
 Make sure you're NOT using Node.js v19 as `pkgzap-cli` is not supported in node versions >19.
