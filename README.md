@@ -2,62 +2,62 @@
   <img width="100%" src="docs/pkgzap-banner.png">
 </p>
 
-# pkgzap
+# ⚡️ PkgZap
 
-An easy way to get the funding details of all the dependencies used in your project and send satoshis. Uses the metadata provided by package registries to fetch information about each dependency's funding sources.
+Get bitcoin tips from projects using your packages and support devs of your project's dependencies.
 
-## 🚀 Quick Start
-### pkgzap-cli
+## 🫰 How It Works? (For Supporters)
 
-Run it in your project's root directory with
+### 1) Run this command in your project's root folder:
+
 ```bash
-npx pkgzap-cli
+npx @getalby/pkgzap-cli
 ```
 
-[See more here](/cli/README.md)
+### 2) Connect a Wallet
 
-### pkgzap
+Securely connect any [NWC wallet](https://nwc.dev/) from the options.
 
-```
-npm install pkgzap
-```
-### `getFundingDetails`
+### 3) Choose Amount and Pay
 
-```js
-import { getFundingDetails } from "pkgzap";
+Enter desired total amount you want to split among all supported dependencies and enjoy the sats flowing!
 
-const fundingInfo = getFundingDetails();
+## 🧑‍💻 How It Works? (For Developers)
 
-console.log(JSON.stringify(fundingInfo, null, 2))
-```
+### 1) Add wallet info to `package.json`
 
-### `fetchFundingInfo`
- 
-```js
-import { fetchFundingInfo } from "pkgzap";
+As a package developer you only have to add your lightning address to your `package.json` file:
 
-const fundingInfo = fetchFundingInfo(packageJsonData); // depth is defaulted to 1
-
-console.log(JSON.stringify(fundingInfo, null, 2))
+```json
+"funding": {
+  "type": "lightning",
+  "url": "lightning:yourname@getalby.com"
+}
 ```
 
-[See more here](/lib/README.md)
+### 2) Publish Package
 
-## 🛠 Development
+Push your latest version to npm like you always do using `npm publish`.
 
-### Landing Page
+### 3) That’s it! You’re fundable.
+
+People can now tip your package!
+
+# 🧐 Troubleshooting
+
+If you run into the following error:
 ```
-yarn install
-yarn run dev
+file:///Users/satoshi/your-project/node_modules/pkgzap-cli/bin/index.js:12
+global.crypto = crypto;
+              ^
+
+TypeError: Cannot set property crypto of #<Object> which has only a getter
+    at file:///Users/satoshi/Coding/your-project/node_modules/pkgzap-cli/bin/index.js:12:15
+    at ModuleJob.run (node:internal/modules/esm/module_job:193:25)
+    at async Promise.all (index 0)
+    at async ESMLoader.import (node:internal/modules/esm/loader:518:24)
+    at async loadESM (node:internal/process/esm_loader:102:5)
+    at async handleMainPromise (node:internal/modules/run_main:66:12)
 ```
 
-And for styling:
-```
-npx tailwindcss -i ./src/input.css -o ./src/index.css --watch
-```
-
-### lib and cli
-```
-yarn install
-yarn run build
-```
+Make sure you're NOT using Node.js v19 as `pkgzap-cli` is not supported in node versions >19.
